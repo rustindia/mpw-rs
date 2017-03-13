@@ -1,0 +1,10 @@
+[package]
+name = "mpw-rs"
+version = "2.4.0"
+authors = [
+    "Rahul De <rahul080327@gmail.com>",
+    "Maarten Billemont <lhunath@lyndir.com>"
+]
+
+[dependencies]
+clap = "2"
