@@ -28,8 +28,29 @@ extern crate clap;
 // You should have received a copy of the GNU General Public License
 // along with Master Password.  If not, see <http://www.gnu.org/licenses/>.
 
-mod arg_parse;
+use std::env;
+use std::io::{self, Write};
 
-fn main() {
-    println!("{:?}", arg_parse::get_opts());
+pub fn read_opt(matches: &clap::ArgMatches, name: &str, env_var: &str) -> Option<String> {
+    match matches.value_of(name) {
+        Some(value) => Some(value.to_string()),
+        None => match env::var(env_var) {
+            Ok(val) => Some(val),
+            Err(_) => None
+        }
+    }
+}
+
+#[allow(unused_must_use)]
+pub fn raw_input(prompt: &str) -> String {
+    let mut buffer = String::new();
+
+    print!("{}", prompt);
+    io::stdout().flush();
+    io::stdin()
+        .read_line(&mut buffer)
+        .ok()
+        .unwrap();
+
+    buffer.trim().to_string()
 }
