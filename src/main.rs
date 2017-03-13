@@ -29,20 +29,31 @@ extern crate clap;
 // along with Master Password.  If not, see <http://www.gnu.org/licenses/>.
 
 use std::env;
+use std::io::{self, Write};
+use clap::{Arg, App};
 
-use clap::{
-    Arg,
-    App
-};
-
-fn read_opt(matches: &clap::ArgMatches, name: &str, env_var: &str) -> String {
+fn read_opt(matches: &clap::ArgMatches, name: &str, env_var: &str) -> Option<String> {
     match matches.value_of(name) {
-        Some(value) => value.to_string(),
+        Some(value) => Some(value.to_string()),
         None => match env::var(env_var) {
-            Ok(val) => val,
-            Err(_) => "".to_string()
+            Ok(val) => Some(val),
+            Err(_) => None
         }
     }
+}
+
+#[allow(unused_must_use)]
+fn raw_input(prompt: &str) -> String {
+    let mut buffer = String::new();
+
+    print!("{}", prompt);
+    io::stdout().flush();
+    io::stdin()
+        .read_line(&mut buffer)
+        .ok()
+        .unwrap();
+
+    buffer.trim().to_string()
 }
 
 fn get_opts() -> (String, String, String, String, String, String, String) {
@@ -113,15 +124,48 @@ fn get_opts() -> (String, String, String, String, String, String, String) {
                                                        | the most significant word(s) of the question."))
                           .get_matches();
 
-    let site = read_opt(&matches, "site", "");
-    let user = read_opt(&matches, "user", "MP_FULLNAME");
-    let template = read_opt(&matches, "template", "MP_SITETYPE");
-    let counter = read_opt(&matches, "counter", "MP_SITECOUNTER");
-    let algo = read_opt(&matches, "algo", "MP_ALGORITHM");
-    let variant = read_opt(&matches, "variant", "");
-    let context = read_opt(&matches, "context", "");
+    let site = match read_opt(&matches, "site", "") {
+        Some(val) => val.to_string(),
+        None => raw_input("Site Name: ")
+    };
 
-    (site, user, template, counter, algo, variant, context)
+    let user = match read_opt(&matches, "user", "MP_FULLNAME") {
+        Some(val) => val.to_string(),
+        None => raw_input("Your full name: ")
+    };
+
+    let variant = match read_opt(&matches, "variant", "") {
+        Some(val) => val.to_string(),
+        None => "password".to_string()
+    };
+
+    let template = match read_opt(&matches, "template", "MP_SITETYPE") {
+        Some(val) => val.to_string(),
+        None => if variant == "password" {
+            "long".to_string()
+        } else if variant == "login" {
+            "name".to_string()
+        } else {
+            unimplemented!()
+        }
+    };
+
+    let counter = match read_opt(&matches, "counter", "MP_SITECOUNTER") {
+        Some(val) => val.to_string(),
+        None => "1".to_string()
+    };
+
+    let algo = match read_opt(&matches, "algo", "MP_ALGORITHM") {
+        Some(val) => val.to_string(),
+        None => "3".to_string()
+    };
+
+    let context = match read_opt(&matches, "context", "") {
+        Some(val) => val.to_string(),
+        None => String::new()
+    };
+
+    (site, user, variant, template, counter, algo, context)
 }
 
 fn main() {
