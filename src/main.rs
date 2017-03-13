@@ -1,4 +1,5 @@
 extern crate clap;
+extern crate rpassword;
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -30,6 +31,22 @@ extern crate clap;
 
 mod arg_parse;
 
+use std::io::{self, Write};
+use rpassword::read_password;
+
+#[allow(unused_must_use)]
 fn main() {
-    println!("{:?}", arg_parse::get_opts());
+    let (
+        site,
+        user,
+        variant,
+        template,
+        counter,
+        algo,
+        context
+    ) = arg_parse::get_opts();
+
+    print!("Your master password: ");
+    io::stdout().flush();
+    let password = read_password().unwrap();
 }

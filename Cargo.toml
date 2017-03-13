@@ -8,3 +8,4 @@ authors = [
 
 [dependencies]
 clap = "2"
+rpassword = "0.3.1"
