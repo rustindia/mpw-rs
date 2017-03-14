@@ -36,15 +36,7 @@ use rpassword::read_password;
 
 #[allow(unused_must_use)]
 fn main() {
-    let (
-        site,
-        user,
-        variant,
-        template,
-        counter,
-        algo,
-        context
-    ) = arg_parse::get_opts();
+    let mpw_options = arg_parse::get_opts();
 
     print!("Your master password: ");
     io::stdout().flush();

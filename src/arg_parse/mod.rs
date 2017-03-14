@@ -32,28 +32,38 @@ mod helpers;
 
 use clap::{Arg, App};
 
-pub fn get_opts() -> (String, String, String, String, String, String, String) {
+pub struct MpwOptions {
+    site: String,
+    user: String,
+    variant: String,
+    template: String,
+    counter: String,
+    algo: String,
+    context: String
+}
+
+pub fn get_opts() -> MpwOptions {
     let matches = App::new("Master Password")
-                          .version("2.4.0")
-                          .author("Rahul De <rahul080327@gmail.com>\n\
+        .version("2.4.0")
+        .author("Rahul De <rahul080327@gmail.com>\n\
                                    Maarten Billemont <lhunath@lyndir.com>")
-                          .about("The rusty, stateless password manager")
-                          .arg(Arg::with_name("site")
-                              .index(1)
-                              .value_name("SITE")
-                              .help("The name of the website."))
-                          .arg(Arg::with_name("user")
-                              .short("u")
-                              .long("user")
-                              .value_name("USER")
-                              .help("Specify the full name of the user.\n\
+        .about("The rusty, stateless password manager")
+        .arg(Arg::with_name("site")
+            .index(1)
+            .value_name("SITE")
+            .help("The name of the website."))
+        .arg(Arg::with_name("user")
+            .short("u")
+            .long("user")
+            .value_name("USER")
+            .help("Specify the full name of the user.\n\
                                     Defaults to MP_FULLNAME in env")
-                              .takes_value(true))
-                          .arg(Arg::with_name("template")
-                              .short("t")
-                              .long("template")
-                              .value_name("TEMPLATE")
-                              .help("Specify the template of the password.\n\
+            .takes_value(true))
+        .arg(Arg::with_name("template")
+            .short("t")
+            .long("template")
+            .value_name("TEMPLATE")
+            .help("Specify the template of the password.\n\
                                     Defaults to MP_SITETYPE in env or 'long' for password, 'name' for login.\n\
                                         x, max, maximum | 20 characters, contains symbols.\n\
                                         l, long         | Copy-friendly, 14 characters, contains symbols.\n\
@@ -63,42 +73,42 @@ pub fn get_opts() -> (String, String, String, String, String, String, String) {
                                         i, pin          | 4 numbers.\n\
                                         n, name         | 9 letter name.\n\
                                         p, phrase       | 20 character sentence.")
-                              .takes_value(true))
-                          .arg(Arg::with_name("counter")
-                              .short("c")
-                              .long("counter")
-                              .value_name("COUNTER")
-                              .help("The value of the counter.\n\
+            .takes_value(true))
+        .arg(Arg::with_name("counter")
+            .short("c")
+            .long("counter")
+            .value_name("COUNTER")
+            .help("The value of the counter.\n\
                                     Defaults to MP_SITECOUNTER in env or 1.")
-                              .takes_value(true))
-                          .arg(Arg::with_name("algo")
-                              .short("a")
-                              .long("algo")
-                              .value_name("ALGO")
-                              .help("The algorithm version to use.\n\
+            .takes_value(true))
+        .arg(Arg::with_name("algo")
+            .short("a")
+            .long("algo")
+            .value_name("ALGO")
+            .help("The algorithm version to use.\n\
                                     Defaults to MP_ALGORITHM in env or 3.")
-                              .takes_value(true))
-                          .arg(Arg::with_name("variant")
-                              .short("v")
-                              .long("variant")
-                              .value_name("VARIANT")
-                              .help("The kind of content to generate.\n\
+            .takes_value(true))
+        .arg(Arg::with_name("variant")
+            .short("v")
+            .long("variant")
+            .value_name("VARIANT")
+            .help("The kind of content to generate.\n\
                                     Defaults to 'password'.\n\
                                         p, password | The password to log in with.\n\
                                         l, login    | The username to log in as.\n\
                                         a, answer   | The answer to a security question.")
-                              .takes_value(true))
-                          .arg(Arg::with_name("context")
-                              .short("C")
-                              .long("context")
-                              .value_name("CONTEXT")
-                              .help("A variant-specific context.\n\
+            .takes_value(true))
+        .arg(Arg::with_name("context")
+            .short("C")
+            .long("context")
+            .value_name("CONTEXT")
+            .help("A variant-specific context.\n\
                                     Defaults to empty.\n\
                                         -v p, password | Doesn't currently use a context.\n\
                                         -v l, login    | Doesn't currently use a context.\n\
                                         -v a, answer   | Empty for a universal site answer or\n\
                                                        | the most significant word(s) of the question."))
-                          .get_matches();
+        .get_matches();
 
     let site = match helpers::read_opt(&matches, "site", "") {
         Some(val) => val.to_string(),
@@ -141,5 +151,13 @@ pub fn get_opts() -> (String, String, String, String, String, String, String) {
         None => String::new()
     };
 
-    (site, user, variant, template, counter, algo, context)
+    MpwOptions {
+        site: site,
+        user: user,
+        variant: variant,
+        template: template,
+        counter: counter,
+        algo: algo,
+        context: context
+    }
 }
