@@ -32,8 +32,7 @@ pub struct MpwOptions {
 pub fn get_opts() -> MpwOptions {
     let matches = App::new("Master Password")
         .version("2.4.0")
-        .author("Rahul De <rahul080327@gmail.com>\n\
-                                   Maarten Billemont <lhunath@lyndir.com>")
+        .author("Rahul De <rahul080327@gmail.com>, Maarten Billemont <lhunath@lyndir.com>")
         .about("The rusty, stateless password manager")
         .arg(Arg::with_name("site")
             .index(1)
