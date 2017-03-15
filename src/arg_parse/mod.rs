@@ -20,13 +20,13 @@ mod helpers;
 use clap::{Arg, App};
 
 pub struct MpwOptions {
-    site: String,
-    user: String,
-    variant: String,
-    template: String,
-    counter: String,
-    algo: String,
-    context: String
+    pub site: String,
+    pub user: String,
+    pub variant: String,
+    pub template: String,
+    pub counter: String,
+    pub algo: String,
+    pub context: String
 }
 
 pub fn get_opts() -> MpwOptions {

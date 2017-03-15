@@ -1,5 +1,6 @@
 extern crate clap;
 extern crate rpassword;
+extern crate crypto;
 
 // This file is part of Master Password.
 //
@@ -17,6 +18,7 @@ extern crate rpassword;
 // along with Master Password.  If not, see <http://www.gnu.org/licenses/>.
 
 mod arg_parse;
+mod identicon;
 
 use std::io::{self, Write};
 use rpassword::read_password;
@@ -28,4 +30,6 @@ fn main() {
     print!("Your master password: ");
     io::stdout().flush();
     let password = read_password().unwrap();
+
+    println!("{}", identicon::generate(password, mpw_options.user));
 }
