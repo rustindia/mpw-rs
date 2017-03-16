@@ -15,7 +15,7 @@ extern crate crypto;
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Master Password.  If not, see <http://www.gnu.org/licenses/>.
+// along with Master Password. If not, see <http://www.gnu.org/licenses/>.
 
 mod arg_parse;
 mod identicon;
