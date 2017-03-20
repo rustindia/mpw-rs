@@ -35,8 +35,18 @@ fn main() {
 
     let identity = identicon::generate(&mpw_options.user, &password);
     let master_key = match core::master_key_for_user(
-        mpw_options.user, password, &mpw_options.algo, mpw_options.variant) {
+        &mpw_options.user, &password, &mpw_options.algo, &mpw_options.variant) {
         Some(val) => val,
         None => panic!("Error")
     };
+
+    let password = core::password_for_site(
+        &master_key,
+        &mpw_options.site,
+        &mpw_options.template,
+        &mpw_options.counter,
+        &mpw_options.variant,
+        &mpw_options.context,
+        &mpw_options.algo
+    );
 }

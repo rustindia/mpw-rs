@@ -16,10 +16,13 @@ extern crate crypto;
 // along with Master Password. If not, see <http://www.gnu.org/licenses/>.
 
 use crypto::scrypt;
+use crypto::sha2;
+use crypto::hmac::Hmac;
+use crypto::mac::Mac;
 use common;
 use common::scrypt_settings;
 
-pub fn master_key(full_name: String, master_password: String, site_variant: String)
+pub fn master_key(full_name: &str, master_password: &str, site_variant: &str)
     -> [u8; scrypt_settings::DK_LEN] {
     let key_scope = match common::scope_for_variant(&site_variant) {
         Some(val) => val,
@@ -41,8 +44,33 @@ pub fn master_key(full_name: String, master_password: String, site_variant: Stri
     digest
 }
 
-pub fn password_for_site(master_key: [u8; scrypt_settings::DK_LEN], site_name: String,
-                         site_type: String, site_counter: i32, site_variant: String,
-                         site_context: String) -> String {
-    unimplemented!();
+pub fn password_for_site(master_key: &[u8; scrypt_settings::DK_LEN], site_name: &str,
+                         site_type: &str, site_counter: &i32, site_variant: &str,
+                         site_context: &str) -> String {
+    let site_scope = match common::scope_for_variant(&site_variant) {
+        Some(val) => val,
+        None => panic!("Invalid scope!")
+    };
+
+    let mut digest: [u8; 32] = [0; 32];
+    let mut mac = Box::new(
+        Hmac::new(sha2::Sha256::new(), master_key)
+    ) as Box<Mac>;
+
+    let input = format!(
+        "{}{}{}{}{}{}",
+        site_scope,
+        site_name.len(),
+        site_name,
+        site_counter,
+        site_context.len(),
+        site_context
+    );
+
+    mac.input(input.as_bytes());
+    mac.raw_result(&mut digest);
+
+    let site_password_seed = digest;
+
+    String::new()
 }

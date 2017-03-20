@@ -24,7 +24,7 @@ pub struct MpwOptions {
     pub user: String,
     pub variant: String,
     pub template: String,
-    pub counter: String,
+    pub counter: i32,
     pub algo: String,
     pub context: String
 }
@@ -123,8 +123,8 @@ pub fn get_opts() -> MpwOptions {
     };
 
     let counter = match helpers::read_opt(&matches, "counter", "MP_SITECOUNTER") {
-        Some(val) => val.to_string(),
-        None => "1".to_string()
+        Some(val) => val.parse::<i32>().unwrap(),
+        None => 1
     };
 
     let algo = match helpers::read_opt(&matches, "algo", "MP_ALGORITHM") {
