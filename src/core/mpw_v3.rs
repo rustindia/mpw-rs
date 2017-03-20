@@ -1,7 +1,3 @@
-extern crate clap;
-extern crate rpassword;
-extern crate crypto;
-
 // This file is part of Master Password.
 //
 // Master Password is free software: you can redistribute it and/or modify
@@ -17,27 +13,20 @@ extern crate crypto;
 // You should have received a copy of the GNU General Public License
 // along with Master Password. If not, see <http://www.gnu.org/licenses/>.
 
-mod arg_parse;
-mod identicon;
-mod core;
-mod common;
+use common;
 
-use std::io::{self, Write};
-use rpassword::read_password;
-
-#[allow(unused_must_use)]
-fn main() {
-    let mpw_options = arg_parse::get_opts();
-
-    print!("Your master password: ");
-    io::stdout().flush();
-    let password = read_password().unwrap();
-
-    println!("{}", identicon::generate(&mpw_options.user, &password));
-
-    let master_key = match core::master_key_for_user(
-        mpw_options.user, password, &mpw_options.algo, mpw_options.variant) {
+pub fn master_key(full_name: String, master_password: String, site_variant: String) -> String {
+    let key_scope = match common::scope_for_variant(&site_variant) {
         Some(val) => val,
-        None => String::new()
+        None => panic!("Invalid scope!")
     };
+
+    let master_key_salt = format!("{}{}{}", key_scope, full_name.len(), master_password);
+
+    master_key_salt
+}
+
+pub fn password_for_site(master_key: String, site_name: String, site_type: String,
+                         site_counter: i32, site_variant: String, site_context: String) -> String {
+    unimplemented!();
 }

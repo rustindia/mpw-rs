@@ -19,7 +19,7 @@ use crypto::sha2;
 use crypto::hmac::Hmac;
 use crypto::mac::Mac;
 
-pub fn generate(full_name: String, master_password: String) -> String {
+pub fn generate(full_name: &str, master_password: &str) -> String {
     let left_arm = vec!['╔', '╚', '╰', '═'];
     let right_arm = vec!['╗', '╝', '╯', '═'];
     let body = ['█', '░', '▒', '▓', '☺', '☻'];
