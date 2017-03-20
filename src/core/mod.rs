@@ -15,8 +15,10 @@
 
 mod mpw_v3;
 
+use common::scrypt_settings::DK_LEN;
+
 pub fn master_key_for_user(full_name: String, master_password: String, algo: &str,
-                           site_variant: String) -> Option<String> {
+                           site_variant: String) -> Option<[u8; 64]> {
     match algo {
         "1" => unimplemented!(),
         "2" => unimplemented!(),
@@ -25,7 +27,7 @@ pub fn master_key_for_user(full_name: String, master_password: String, algo: &st
     }
 }
 
-pub fn password_for_site(master_key: String, site_name: String, site_type: String,
+pub fn password_for_site(master_key: [u8; DK_LEN], site_name: String, site_type: String,
                          site_counter: i32, site_variant: String, site_context: String,
                          algo: &str) -> Option<String> {
     match algo {

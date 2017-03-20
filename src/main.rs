@@ -33,11 +33,10 @@ fn main() {
     io::stdout().flush();
     let password = read_password().unwrap();
 
-    println!("{}", identicon::generate(&mpw_options.user, &password));
-
+    let identity = identicon::generate(&mpw_options.user, &password);
     let master_key = match core::master_key_for_user(
         mpw_options.user, password, &mpw_options.algo, mpw_options.variant) {
         Some(val) => val,
-        None => String::new()
+        None => panic!("Error")
     };
 }

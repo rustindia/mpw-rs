@@ -13,6 +13,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Master Password. If not, see <http://www.gnu.org/licenses/>.
 
+pub mod scrypt_settings {
+    pub const N: f64 = 32768_f64;
+    pub const R: u32 = 8_u32;
+    pub const P: u32 = 2_u32;
+    pub const DK_LEN: usize = 64_usize;
+}
+
 pub fn scope_for_variant(site_variant: &str) -> Option<String> {
     match site_variant {
         "password" => Some(String::from("com.lyndir.masterpassword")),
