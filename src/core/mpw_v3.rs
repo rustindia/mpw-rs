@@ -81,14 +81,12 @@ pub fn password_for_site(master_key: &[u8; scrypt_settings::DK_LEN], site_name: 
                 .zip(1..template_bytes.len() + 1)
                 .map(|pair| MpwCharPair { class: *pair.0, seed_byte: pair.1 })
                 .map(common::character_from_class)
-                .map(|c| c.unwrap_or(b'\0'))
-                .filter(|&c| c != b'\0')
-                .collect::<Vec<u8>>();
+                .collect::<Vec<Option<u8>>>();
 
-            if password.len() == template_bytes.len() {
-                Some(String::from_utf8(password).unwrap())
-            } else {
-                None
+            match password.iter().any(|c| c.is_none()) {
+                true => None,
+                false => Some(String::from_utf8(password
+                    .iter().map(|c| c.unwrap()).collect::<Vec<u8>>()).unwrap())
             }
         } else {
             None
