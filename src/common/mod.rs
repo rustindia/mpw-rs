@@ -20,6 +20,11 @@ pub mod scrypt_settings {
     pub const DK_LEN: usize = 64_usize;
 }
 
+pub struct MpwCharPair {
+    pub class: u8,
+    pub seed_byte: usize
+}
+
 pub fn scope_for_variant(site_variant: &str) -> Option<String> {
     match site_variant {
         "password" => Some(String::from("com.lyndir.masterpassword")),
@@ -51,6 +56,27 @@ pub fn template_for_type(site_type: &str, seed_byte: &u8) -> Option<String> {
 
     match choice {
         Some(val) => Some(String::from(val[*seed_byte as usize % val.len()])),
+        None => None
+    }
+}
+
+pub fn character_from_class(pair: MpwCharPair) -> Option<u8> {
+    let choice = match pair.class {
+        b'V' => Some("AEIOU"),
+        b'C' => Some("BCDFGHJKLMNPQRSTVWXYZ"),
+        b'v' => Some("aeiou"),
+        b'c' => Some("bcdfghjklmnpqrstvwxyz"),
+        b'A' => Some("AEIOUBCDFGHJKLMNPQRSTVWXYZ"),
+        b'a' => Some("AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz"),
+        b'n' => Some("0123456789"),
+        b'o' => Some("@&%?,=[]_:-+*$#!'^~;()/."),
+        b'x' => Some("AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz0123456789!@#$%^&*()"),
+        b' ' => Some(" "),
+        _ => None
+    };
+
+    match choice {
+        Some(val) => Some(val.as_bytes()[pair.seed_byte % val.len()]),
         None => None
     }
 }

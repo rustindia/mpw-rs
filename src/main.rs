@@ -52,4 +52,6 @@ fn main() {
         Some(val) => val,
         None => panic!("Password Error")
     };
+
+    println!("[ {} ]: {}", identity, password);
 }
