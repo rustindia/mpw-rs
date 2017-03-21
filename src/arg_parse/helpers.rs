@@ -32,6 +32,7 @@ pub fn read_opt(matches: &clap::ArgMatches, name: &str, env_var: &str) -> Option
 pub fn raw_input(prompt: &str) -> String {
     let mut buffer = String::new();
 
+    // TODO: Propagate IO errors in Monad style
     print!("{}", prompt);
     io::stdout().flush();
     io::stdin()
