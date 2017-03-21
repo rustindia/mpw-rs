@@ -23,54 +23,58 @@ use common;
 use common::scrypt_settings;
 
 pub fn master_key(full_name: &str, master_password: &str, site_variant: &str)
-    -> [u8; scrypt_settings::DK_LEN] {
-    let key_scope = match common::scope_for_variant(&site_variant) {
-        Some(val) => val,
-        None => panic!("Invalid scope!")
-    };
+                  -> Option<[u8; scrypt_settings::DK_LEN]> {
+    let scope = common::scope_for_variant(&site_variant);
 
-    let master_key_salt = format!("{}{}{}", key_scope, full_name.len(), master_password);
-    let scrypt_params = scrypt::ScryptParams::new(
-        scrypt_settings::N.log(2.0) as u8, scrypt_settings::R, scrypt_settings::P);
-    let mut digest: [u8; scrypt_settings::DK_LEN] = [0; scrypt_settings::DK_LEN];
+    if scope.is_some() {
+        let key_scope = scope.unwrap();
+        let master_key_salt = format!("{}{}{}", key_scope, full_name.len(), master_password);
+        let scrypt_params = scrypt::ScryptParams::new(
+            scrypt_settings::N.log(2.0) as u8, scrypt_settings::R, scrypt_settings::P);
+        let mut digest: [u8; scrypt_settings::DK_LEN] = [0; scrypt_settings::DK_LEN];
 
-    scrypt::scrypt(
-        master_password.as_bytes(),
-        master_key_salt.as_bytes(),
-        &scrypt_params,
-        &mut digest
-    );
+        scrypt::scrypt(
+            master_password.as_bytes(),
+            master_key_salt.as_bytes(),
+            &scrypt_params,
+            &mut digest
+        );
 
-    digest
+        Some(digest)
+    } else {
+        None
+    }
 }
 
 pub fn password_for_site(master_key: &[u8; scrypt_settings::DK_LEN], site_name: &str,
                          site_type: &str, site_counter: &i32, site_variant: &str,
-                         site_context: &str) -> String {
-    let site_scope = match common::scope_for_variant(&site_variant) {
-        Some(val) => val,
-        None => panic!("Invalid scope!")
-    };
+                         site_context: &str) -> Option<String> {
+    let scope = common::scope_for_variant(&site_variant);
 
-    let mut digest: [u8; 32] = [0; 32];
-    let mut mac = Box::new(
-        Hmac::new(sha2::Sha256::new(), master_key)
-    ) as Box<Mac>;
+    if scope.is_some() {
+        let site_scope = scope.unwrap();
+        let mut digest: [u8; 32] = [0; 32];
+        let mut mac = Box::new(
+            Hmac::new(sha2::Sha256::new(), master_key)
+        ) as Box<Mac>;
 
-    let input = format!(
-        "{}{}{}{}{}{}",
-        site_scope,
-        site_name.len(),
-        site_name,
-        site_counter,
-        site_context.len(),
-        site_context
-    );
+        let input = format!(
+            "{}{}{}{}{}{}",
+            site_scope,
+            site_name.len(),
+            site_name,
+            site_counter,
+            site_context.len(),
+            site_context
+        );
 
-    mac.input(input.as_bytes());
-    mac.raw_result(&mut digest);
+        mac.input(input.as_bytes());
+        mac.raw_result(&mut digest);
 
-    let site_password_seed = digest;
+        let site_password_seed = digest;
 
-    String::new()
+        Some(String::new())
+    } else {
+        None
+    }
 }

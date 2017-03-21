@@ -22,7 +22,7 @@ pub fn master_key_for_user(full_name: &str, master_password: &str, algo: &str,
     match algo {
         "1" => unimplemented!(),
         "2" => unimplemented!(),
-        "3" => Some(mpw_v3::master_key(full_name, master_password, site_variant)),
+        "3" => mpw_v3::master_key(full_name, master_password, site_variant),
         _ => None
     }
 }
@@ -33,8 +33,8 @@ pub fn password_for_site(master_key: &[u8; DK_LEN], site_name: &str, site_type: 
     match algo {
         "1" => unimplemented!(),
         "2" => unimplemented!(),
-        "3" => Some(mpw_v3::password_for_site(master_key, site_name, site_type, site_counter,
-                                              site_variant, site_context)),
+        "3" => mpw_v3::password_for_site(master_key, site_name, site_type, site_counter,
+                                              site_variant, site_context),
         _ => None
     }
 }

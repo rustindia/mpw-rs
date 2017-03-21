@@ -28,3 +28,29 @@ pub fn scope_for_variant(site_variant: &str) -> Option<String> {
         _ => None
     }
 }
+
+pub fn template_for_type(site_type: &str, seed_byte: &u8) -> Option<String> {
+    let choice = match site_type {
+        "x" | "max" | "maximum" => Some(vec!["anoxxxxxxxxxxxxxxxxx", "axxxxxxxxxxxxxxxxxno"]),
+        "l" | "long" => Some(vec!["CvcvnoCvcvCvcv", "CvcvCvcvnoCvcv", "CvcvCvcvCvcvno",
+                                  "CvccnoCvcvCvcv", "CvccCvcvnoCvcv", "CvccCvcvCvcvno",
+                                  "CvcvnoCvccCvcv", "CvcvCvccnoCvcv", "CvcvCvccCvcvno",
+                                  "CvcvnoCvcvCvcc", "CvcvCvcvnoCvcc", "CvcvCvcvCvccno",
+                                  "CvccnoCvccCvcv", "CvccCvccnoCvcv", "CvccCvccCvcvno",
+                                  "CvcvnoCvccCvcc", "CvcvCvccnoCvcc", "CvcvCvccCvccno",
+                                  "CvccnoCvcvCvcc", "CvccCvcvnoCvcc", "CvccCvcvCvccno"]),
+        "m" | "med" | "medium" => Some(vec!["CvcnoCvc", "CvcCvcno"]),
+        "b" | "basic" => Some(vec!["aaanaaan", "aannaaan", "aaannaaa"]),
+        "s" | "short" => Some(vec!["Cvcn"]),
+        "i" | "pin" => Some(vec!["nnnn"]),
+        "n" | "name" => Some(vec!["cvccvcvcv"]),
+        "p" | "phrase" => Some(vec!["cvcc cvc cvccvcv cvc", "cvc cvccvcvcv cvcv",
+                                    "cv cvccv cvc cvcvccv"]),
+        _ => None
+    };
+
+    match choice {
+        Some(val) => Some(String::from(val[*seed_byte as usize % val.len()])),
+        None => None
+    }
+}

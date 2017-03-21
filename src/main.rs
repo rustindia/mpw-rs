@@ -37,10 +37,10 @@ fn main() {
     let master_key = match core::master_key_for_user(
         &mpw_options.user, &password, &mpw_options.algo, &mpw_options.variant) {
         Some(val) => val,
-        None => panic!("Error")
+        None => panic!("Master Key Error")
     };
 
-    let password = core::password_for_site(
+    let password = match core::password_for_site(
         &master_key,
         &mpw_options.site,
         &mpw_options.template,
@@ -48,5 +48,8 @@ fn main() {
         &mpw_options.variant,
         &mpw_options.context,
         &mpw_options.algo
-    );
+    ) {
+        Some(val) => val,
+        None => panic!("Password Error")
+    };
 }
