@@ -47,3 +47,8 @@ pub fn generate(full_name: &str, master_password: &str) -> String {
         accessory[identicon_seed[3] as usize % accessory.len()]
     )
 }
+
+#[test]
+fn generate_identicon_for_full_name_and_master_password() {
+    assert!(generate("test", "test") == "╔░╝☂");
+}
