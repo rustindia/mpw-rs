@@ -20,11 +20,6 @@ pub mod scrypt_settings {
     pub const DK_LEN: usize = 64_usize;
 }
 
-pub struct MpwCharPair {
-    pub class: u8,
-    pub seed_byte: usize
-}
-
 pub fn scope_for_variant(site_variant: &str) -> Option<String> {
     match site_variant {
         "password" => Some(String::from("com.lyndir.masterpassword")),
@@ -60,8 +55,8 @@ pub fn template_for_type(site_type: &str, seed_byte: &u8) -> Option<String> {
     }
 }
 
-pub fn character_from_class(pair: MpwCharPair) -> Option<u8> {
-    let choice = match pair.class {
+pub fn character_from_class(class: u8, seed_byte: usize) -> Option<u8> {
+    let choice = match class {
         b'V' => Some("AEIOU"),
         b'C' => Some("BCDFGHJKLMNPQRSTVWXYZ"),
         b'v' => Some("aeiou"),
@@ -76,7 +71,7 @@ pub fn character_from_class(pair: MpwCharPair) -> Option<u8> {
     };
 
     match choice {
-        Some(val) => Some(val.as_bytes()[pair.seed_byte % val.len()]),
+        Some(val) => Some(val.as_bytes()[seed_byte % val.len()]),
         None => None
     }
 }

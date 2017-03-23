@@ -21,7 +21,6 @@ use crypto::hmac::Hmac;
 use crypto::mac::Mac;
 use common;
 use common::scrypt_settings;
-use common::MpwCharPair;
 
 pub fn master_key(full_name: &str, master_password: &str, site_variant: &str)
                   -> Option<[u8; scrypt_settings::DK_LEN]> {
@@ -83,8 +82,7 @@ pub fn password_for_site(master_key: &[u8; scrypt_settings::DK_LEN], site_name: 
             let password = template_bytes
                 .iter()
                 .zip(1..template_bytes.len() + 1)
-                .map(|pair| MpwCharPair { class: *pair.0, seed_byte: pair.1 })
-                .map(common::character_from_class)
+                .map(|pair| common::character_from_class(*pair.0, pair.1))
                 .collect::<Vec<Option<u8>>>();
 
             match password.iter().any(|c| c.is_none()) {
