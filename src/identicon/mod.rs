@@ -49,6 +49,6 @@ pub fn generate(full_name: &str, master_password: &str) -> String {
 }
 
 #[test]
-fn generate_identicon_for_full_name_and_master_password() {
+fn get_identicon_for_full_name_and_master_password() {
     assert!(generate("test", "test") == "╔░╝☂");
 }

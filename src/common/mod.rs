@@ -84,3 +84,38 @@ pub fn u32_to_bytes(u: u32) -> [u8; 4] {
         (u & 0xff) as u8
     ]
 }
+
+#[test]
+fn get_scope_for_valid_variant() {
+    assert!(scope_for_variant("password") == Some(String::from("com.lyndir.masterpassword")));
+}
+
+#[test]
+fn get_scope_for_invalid_variant() {
+    assert!(scope_for_variant("invalid") == None);
+}
+
+#[test]
+fn get_template_for_valid_type() {
+    assert!(template_for_type("long", &(11 as u8)) == Some(String::from("CvcvCvcvCvccno")));
+}
+
+#[test]
+fn get_template_for_invalid_type() {
+    assert!(template_for_type("invalid", &(11 as u8)) == None);
+}
+
+#[test]
+fn get_character_from_valid_class() {
+    assert!(character_from_class(b'v', 11 as usize) == Some(b'e'));
+}
+
+#[test]
+fn get_character_from_invalid_class() {
+    assert!(character_from_class(b'z', 11 as usize) == None);
+}
+
+#[test]
+fn get_bytes_from_u32() {
+    assert!(u32_to_bytes(2) == [0, 0, 0, 2]);
+}
