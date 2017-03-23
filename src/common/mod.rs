@@ -80,3 +80,12 @@ pub fn character_from_class(pair: MpwCharPair) -> Option<u8> {
         None => None
     }
 }
+
+pub fn u32_to_bytes(u: u32) -> [u8; 4] {
+    [
+        ((u >> 24) & 0xff) as u8,
+        ((u >> 16) & 0xff) as u8,
+        ((u >> 8) & 0xff) as u8,
+        (u & 0xff) as u8
+    ]
+}

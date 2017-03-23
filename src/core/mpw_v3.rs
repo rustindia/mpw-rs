@@ -29,14 +29,18 @@ pub fn master_key(full_name: &str, master_password: &str, site_variant: &str)
 
     if scope.is_some() {
         let key_scope = scope.unwrap();
-        let master_key_salt = format!("{}{}{}", key_scope, full_name.len(), master_password);
         let scrypt_params = scrypt::ScryptParams::new(
             scrypt_settings::N.log(2.0) as u8, scrypt_settings::R, scrypt_settings::P);
         let mut digest: [u8; scrypt_settings::DK_LEN] = [0; scrypt_settings::DK_LEN];
+        let mut master_key_salt = Vec::new();
+
+        master_key_salt.extend_from_slice(&key_scope.as_bytes());
+        master_key_salt.extend_from_slice(&common::u32_to_bytes(full_name.len() as u32));
+        master_key_salt.extend_from_slice(&master_password.as_bytes());
 
         scrypt::scrypt(
             master_password.as_bytes(),
-            master_key_salt.as_bytes(),
+            master_key_salt.as_slice(),
             &scrypt_params,
             &mut digest
         );
