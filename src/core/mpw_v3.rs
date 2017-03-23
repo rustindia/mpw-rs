@@ -62,17 +62,12 @@ pub fn password_for_site(master_key: &[u8; scrypt_settings::DK_LEN], site_name: 
             Hmac::new(sha2::Sha256::new(), master_key)
         ) as Box<Mac>;
 
-        let input = format!(
-            "{}{}{}{}{}{}",
-            site_scope,
-            site_name.len(),
-            site_name,
-            site_counter,
-            site_context.len(),
-            site_context
-        );
-
-        mac.input(input.as_bytes());
+        mac.input(&site_scope.as_bytes());
+        mac.input(&common::u32_to_bytes(site_name.len() as u32));
+        mac.input(&site_name.as_bytes());
+        mac.input(&common::u32_to_bytes(*site_counter as u32));
+        mac.input(&common::u32_to_bytes(site_context.len() as u32));
+        mac.input(&site_context.as_bytes());
         mac.raw_result(&mut site_password_seed);
 
         let template = common::template_for_type(site_type, &site_password_seed[0]);
