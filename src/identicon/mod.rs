@@ -48,7 +48,12 @@ pub fn generate(full_name: &str, master_password: &str) -> String {
     )
 }
 
-#[test]
-fn get_identicon_for_full_name_and_master_password() {
-    assert!(generate("test", "test") == "╔░╝☂");
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn get_identicon_for_full_name_and_master_password() {
+        assert!(generate("test", "test") == "╔░╝☂");
+    }
 }
