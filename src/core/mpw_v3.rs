@@ -100,7 +100,6 @@ mod tests {
     #[test]
     fn get_master_key_for_password() {
         let actual = master_key("test", "pass", "password").unwrap().to_vec();
-        println!("{:?}", actual);
 
         assert!(actual ==
             vec![
