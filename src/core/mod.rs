@@ -20,6 +20,7 @@ use common::scrypt_settings::DK_LEN;
 pub fn master_key_for_user(full_name: &str, master_password: &str, algo: &str,
                            site_variant: &str) -> Option<[u8; 64]> {
     match algo {
+        "0" => unimplemented!(),
         "1" => unimplemented!(),
         "2" => unimplemented!(),
         "3" => mpw_v3::master_key(full_name, master_password, site_variant),
@@ -31,6 +32,7 @@ pub fn password_for_site(master_key: &[u8; DK_LEN], site_name: &str, site_type: 
                          site_counter: &i32, site_variant: &str, site_context: &str,
                          algo: &str) -> Option<String> {
     match algo {
+        "0" => unimplemented!(),
         "1" => unimplemented!(),
         "2" => unimplemented!(),
         "3" => mpw_v3::password_for_site(master_key, site_name, site_type, site_counter,
