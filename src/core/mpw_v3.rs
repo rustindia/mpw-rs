@@ -66,8 +66,10 @@ pub fn password_for_site(master_key: &[u8; scrypt_settings::DK_LEN], site_name: 
         mac.input(&common::u32_to_bytes(site_name.len() as u32));
         mac.input(&site_name.as_bytes());
         mac.input(&common::u32_to_bytes(*site_counter as u32));
-        mac.input(&common::u32_to_bytes(site_context.len() as u32));
-        mac.input(&site_context.as_bytes());
+        if !site_context.is_empty() {
+            mac.input(&common::u32_to_bytes(site_context.len() as u32));
+            mac.input(&site_context.as_bytes());
+        }
         mac.raw_result(&mut site_password_seed);
 
         let template = common::template_for_type(site_type, &site_password_seed[0]);
@@ -77,7 +79,8 @@ pub fn password_for_site(master_key: &[u8; scrypt_settings::DK_LEN], site_name: 
             let password = template_bytes
                 .iter()
                 .zip(1..template_bytes.len() + 1)
-                .map(|pair| common::character_from_class(*pair.0, pair.1))
+                .map(|pair| common::character_from_class(
+                    *pair.0, site_password_seed[pair.1] as usize))
                 .collect::<Vec<Option<u8>>>();
 
             match password.iter().any(|c| c.is_none()) {
@@ -109,5 +112,13 @@ mod tests {
                 9, 158, 214, 23, 166, 89, 36, 174, 64, 112
             ]
         );
+    }
+
+    #[test]
+    fn get_master_password() {
+        let master_key = master_key("test", "pass", "password").unwrap();
+        let actual = password_for_site(&master_key, "site", "max", &(1 as i32), "password", "");
+
+        assert!(actual == Some(String::from("QsKBWAYdT9dh^AOGVA0.")));
     }
 }
