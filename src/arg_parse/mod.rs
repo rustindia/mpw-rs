@@ -45,10 +45,10 @@ pub fn get_opts() -> MpwOptions {
             .help("Specify the full name of the user.\n\
                                     Defaults to MP_FULLNAME in env")
             .takes_value(true))
-        .arg(Arg::with_name("template")
+        .arg(Arg::with_name("type")
             .short("t")
-            .long("template")
-            .value_name("TEMPLATE")
+            .long("type")
+            .value_name("TYPE")
             .help("Specify the template of the password.\n\
                                     Defaults to MP_SITETYPE in env or 'long' for password, 'name' for login.\n\
                                         x, max, maximum | 20 characters, contains symbols.\n\
