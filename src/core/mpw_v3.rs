@@ -35,7 +35,7 @@ pub fn master_key(full_name: &str, master_password: &str, site_variant: &str)
 
         master_key_salt.extend_from_slice(&key_scope.as_bytes());
         master_key_salt.extend_from_slice(&common::u32_to_bytes(full_name.len() as u32));
-        master_key_salt.extend_from_slice(&master_password.as_bytes());
+        master_key_salt.extend_from_slice(&full_name.as_bytes());
 
         scrypt::scrypt(
             master_password.as_bytes(),
@@ -90,5 +90,25 @@ pub fn password_for_site(master_key: &[u8; scrypt_settings::DK_LEN], site_name: 
         }
     } else {
         None
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn get_master_key_for_password() {
+        let actual = master_key("test", "pass", "password").unwrap().to_vec();
+        println!("{:?}", actual);
+
+        assert!(actual ==
+            vec![
+                51, 253, 82, 252, 68, 97, 191, 162, 127, 73, 153, 160, 52, 128, 204, 4, 183, 190,
+                106, 180, 68, 126, 100, 94, 132, 141, 99, 143, 106, 211, 94, 245, 245, 255, 195, 72,
+                28, 128, 197, 51, 99, 27, 125, 24, 54, 193, 223, 230, 118, 181, 225, 236, 171, 104,
+                9, 158, 214, 23, 166, 89, 36, 174, 64, 112
+            ]
+        );
     }
 }
