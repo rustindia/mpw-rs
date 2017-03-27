@@ -108,16 +108,16 @@ pub fn get_opts() -> MpwOptions {
     };
 
     let variant = match helpers::read_opt(&matches, "variant", "") {
-        Some(val) => SiteVariant::from_str(&val.to_string()),
-        None => SiteVariant::from_str("password")
+        Some(val) => SiteVariant::from(&val.to_string()),
+        None => SiteVariant::from("password")
     };
 
     let template = match helpers::read_opt(&matches, "type", "MP_SITETYPE") {
-        Some(val) => SiteType::from_str(&val.to_string()),
+        Some(val) => SiteType::from(&val.to_string()),
         None => if variant == Some(SiteVariant::Password) {
-            SiteType::from_str("long")
+            SiteType::from("long")
         } else if variant == Some(SiteVariant::Login) {
-            SiteType::from_str("name")
+            SiteType::from("name")
         } else {
             unimplemented!()
         }

@@ -28,7 +28,7 @@ pub enum SiteVariant {
 }
 
 impl SiteVariant {
-    pub fn from_str(s: &str) -> Option<SiteVariant> {
+    pub fn from(s: &str) -> Option<SiteVariant> {
         match s {
             "p" | "password"
             => Some(SiteVariant::Password),
@@ -54,7 +54,7 @@ pub enum SiteType {
 }
 
 impl SiteType {
-    pub fn from_str(s: &str) -> Option<SiteType> {
+    pub fn from(s: &str) -> Option<SiteType> {
         match s {
             "x" | "max" | "maximum"
             => Some(SiteType::Maximum),
@@ -158,22 +158,22 @@ mod tests {
 
     #[test]
     fn get_valid_site_variant() {
-        assert!(SiteVariant::from_str("password") == Some(SiteVariant::Password));
+        assert!(SiteVariant::from("password") == Some(SiteVariant::Password));
     }
 
     #[test]
     fn get_invalid_site_variant() {
-        assert!(SiteVariant::from_str("invalid") == None);
+        assert!(SiteVariant::from("invalid") == None);
     }
 
     #[test]
     fn get_valid_site_type() {
-        assert!(SiteType::from_str("basic") == Some(SiteType::Basic));
+        assert!(SiteType::from("basic") == Some(SiteType::Basic));
     }
 
     #[test]
     fn get_invalid_site_type() {
-        assert!(SiteType::from_str("invalid") == None);
+        assert!(SiteType::from("invalid") == None);
     }
 
     #[test]

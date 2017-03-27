@@ -33,9 +33,9 @@ pub fn master_key(full_name: &str, master_password: &str, site_variant: &SiteVar
         let mut digest: [u8; scrypt_settings::DK_LEN] = [0; scrypt_settings::DK_LEN];
         let mut master_key_salt = Vec::new();
 
-        master_key_salt.extend_from_slice(&key_scope.as_bytes());
+        master_key_salt.extend_from_slice(key_scope.as_bytes());
         master_key_salt.extend_from_slice(&common::u32_to_bytes(full_name.len() as u32));
-        master_key_salt.extend_from_slice(&full_name.as_bytes());
+        master_key_salt.extend_from_slice(full_name.as_bytes());
 
         scrypt(
             master_password.as_bytes(),
@@ -59,13 +59,13 @@ pub fn password_for_site(master_key: &[u8; scrypt_settings::DK_LEN], site_name: 
         let site_scope = scope.unwrap();
         let mut input = Vec::new();
 
-        input.extend_from_slice(&site_scope.as_bytes());
+        input.extend_from_slice(site_scope.as_bytes());
         input.extend_from_slice(&common::u32_to_bytes(site_name.len() as u32));
-        input.extend_from_slice(&site_name.as_bytes());
+        input.extend_from_slice(site_name.as_bytes());
         input.extend_from_slice(&common::u32_to_bytes(*site_counter as u32));
         if !site_context.is_empty() {
             input.extend_from_slice(&common::u32_to_bytes(site_context.len() as u32));
-            input.extend_from_slice(&site_context.as_bytes());
+            input.extend_from_slice(site_context.as_bytes());
         }
 
         let signing_key = hmac::SigningKey::new(&digest::SHA256, master_key);
@@ -83,9 +83,8 @@ pub fn password_for_site(master_key: &[u8; scrypt_settings::DK_LEN], site_name: 
                     *pair.0, site_password_seed[pair.1] as usize))
                 .collect::<Vec<Option<u8>>>();
 
-            match password.iter().any(|c| c.is_none()) {
-                true => None,
-                false => Some(String::from_utf8(password
+            if password.iter().any(|c| c.is_none()) { None } else {
+                Some(String::from_utf8(password
                     .iter().map(|c| c.unwrap()).collect::<Vec<u8>>()).unwrap())
             }
         } else {
