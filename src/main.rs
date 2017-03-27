@@ -1,6 +1,4 @@
-extern crate clap;
 extern crate rpassword;
-extern crate crypto;
 
 // This file is part of Master Password.
 //

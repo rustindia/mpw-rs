@@ -1,4 +1,5 @@
-extern crate crypto;
+extern crate ring;
+extern crate ring_pwhash;
 
 // This file is part of Master Password.
 //
@@ -15,10 +16,8 @@ extern crate crypto;
 // You should have received a copy of the GNU General Public License
 // along with Master Password. If not, see <http://www.gnu.org/licenses/>.
 
-use crypto::scrypt;
-use crypto::sha2;
-use crypto::hmac::Hmac;
-use crypto::mac::Mac;
+use self::ring::{digest, hmac};
+use self::ring_pwhash::scrypt::{scrypt, ScryptParams};
 use common;
 use common::scrypt_settings;
 
@@ -28,7 +27,7 @@ pub fn master_key(full_name: &str, master_password: &str, site_variant: &str)
 
     if scope.is_some() {
         let key_scope = scope.unwrap();
-        let scrypt_params = scrypt::ScryptParams::new(
+        let scrypt_params = ScryptParams::new(
             scrypt_settings::N.log(2.0) as u8, scrypt_settings::R, scrypt_settings::P);
         let mut digest: [u8; scrypt_settings::DK_LEN] = [0; scrypt_settings::DK_LEN];
         let mut master_key_salt = Vec::new();
@@ -37,7 +36,7 @@ pub fn master_key(full_name: &str, master_password: &str, site_variant: &str)
         master_key_salt.extend_from_slice(&common::u32_to_bytes(full_name.len() as u32));
         master_key_salt.extend_from_slice(&full_name.as_bytes());
 
-        scrypt::scrypt(
+        scrypt(
             master_password.as_bytes(),
             master_key_salt.as_slice(),
             &scrypt_params,
@@ -57,20 +56,20 @@ pub fn password_for_site(master_key: &[u8; scrypt_settings::DK_LEN], site_name: 
 
     if scope.is_some() {
         let site_scope = scope.unwrap();
-        let mut site_password_seed: [u8; 32] = [0; 32];
-        let mut mac = Box::new(
-            Hmac::new(sha2::Sha256::new(), master_key)
-        ) as Box<Mac>;
+        let mut input = Vec::new();
 
-        mac.input(&site_scope.as_bytes());
-        mac.input(&common::u32_to_bytes(site_name.len() as u32));
-        mac.input(&site_name.as_bytes());
-        mac.input(&common::u32_to_bytes(*site_counter as u32));
+        input.extend_from_slice(&site_scope.as_bytes());
+        input.extend_from_slice(&common::u32_to_bytes(site_name.len() as u32));
+        input.extend_from_slice(&site_name.as_bytes());
+        input.extend_from_slice(&common::u32_to_bytes(*site_counter as u32));
         if !site_context.is_empty() {
-            mac.input(&common::u32_to_bytes(site_context.len() as u32));
-            mac.input(&site_context.as_bytes());
+            input.extend_from_slice(&common::u32_to_bytes(site_context.len() as u32));
+            input.extend_from_slice(&site_context.as_bytes());
         }
-        mac.raw_result(&mut site_password_seed);
+
+        let signing_key = hmac::SigningKey::new(&digest::SHA256, master_key);
+        let output = hmac::sign(&signing_key, input.as_slice());
+        let site_password_seed = output.as_ref();
 
         let template = common::template_for_type(site_type, &site_password_seed[0]);
         if template.is_some() {

@@ -17,7 +17,7 @@ extern crate clap;
 
 mod helpers;
 
-use clap::{Arg, App};
+use self::clap::{Arg, App};
 
 pub struct MpwOptions {
     pub site: String,

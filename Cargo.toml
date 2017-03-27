@@ -24,4 +24,5 @@ authors = [
 [dependencies]
 clap = "2"
 rpassword = "0.3.1"
-rust-crypto = "^0.2"
+ring = "0.7"
+ring-pwhash = "0.1"

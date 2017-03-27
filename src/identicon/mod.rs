@@ -1,4 +1,4 @@
-extern crate crypto;
+extern crate ring;
 
 // This file is part of Master Password.
 //
@@ -15,9 +15,7 @@ extern crate crypto;
 // You should have received a copy of the GNU General Public License
 // along with Master Password. If not, see <http://www.gnu.org/licenses/>.
 
-use crypto::sha2;
-use crypto::hmac::Hmac;
-use crypto::mac::Mac;
+use self::ring::{digest, hmac};
 
 pub fn generate(full_name: &str, master_password: &str) -> String {
     let left_arm = vec!['╔', '╚', '╰', '═'];
@@ -30,14 +28,9 @@ pub fn generate(full_name: &str, master_password: &str) -> String {
         '⚔', '⚖', '⚙', '⚠', '⌘', '⏎', '✄', '✆', '✈', '✉', '✌'
     ];
 
-    let mut digest: [u8; 32] = [0; 32];
-    let mut mac = Box::new(
-        Hmac::new(sha2::Sha256::new(), master_password.as_bytes())
-    ) as Box<Mac>;
-    mac.input(full_name.as_bytes());
-    mac.raw_result(&mut digest);
-
-    let identicon_seed = digest;
+    let signing_key = hmac::SigningKey::new(&digest::SHA256, master_password.as_bytes());
+    let output = hmac::sign(&signing_key, full_name.as_bytes());
+    let identicon_seed = output.as_ref();
 
     format!(
         "{}{}{}{}",
