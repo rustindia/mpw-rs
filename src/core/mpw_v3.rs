@@ -20,8 +20,9 @@ use self::ring::{digest, hmac};
 use self::ring_pwhash::scrypt::{scrypt, ScryptParams};
 use common;
 use common::scrypt_settings;
+use common::{SiteVariant, SiteType};
 
-pub fn master_key(full_name: &str, master_password: &str, site_variant: &common::SiteVariant)
+pub fn master_key(full_name: &str, master_password: &str, site_variant: &SiteVariant)
                   -> Option<[u8; scrypt_settings::DK_LEN]> {
     let scope = common::scope_for_variant(site_variant);
 
@@ -50,7 +51,7 @@ pub fn master_key(full_name: &str, master_password: &str, site_variant: &common:
 }
 
 pub fn password_for_site(master_key: &[u8; scrypt_settings::DK_LEN], site_name: &str,
-                         site_type: &common::SiteType, site_counter: &i32, site_variant: &common::SiteVariant,
+                         site_type: &SiteType, site_counter: &i32, site_variant: &SiteVariant,
                          site_context: &str) -> Option<String> {
     let scope = common::scope_for_variant(site_variant);
 
