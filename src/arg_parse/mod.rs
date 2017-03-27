@@ -111,7 +111,7 @@ pub fn get_opts() -> MpwOptions {
         None => "password".to_string()
     };
 
-    let template = match helpers::read_opt(&matches, "template", "MP_SITETYPE") {
+    let template = match helpers::read_opt(&matches, "type", "MP_SITETYPE") {
         Some(val) => val.to_string(),
         None => if variant == "password" {
             "long".to_string()
