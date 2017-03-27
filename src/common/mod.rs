@@ -157,6 +157,26 @@ mod tests {
     use common::{SiteType, SiteVariant};
 
     #[test]
+    fn get_valid_site_variant() {
+        assert!(SiteVariant::from_str("password") == Some(SiteVariant::Password));
+    }
+
+    #[test]
+    fn get_invalid_site_variant() {
+        assert!(SiteVariant::from_str("invalid") == None);
+    }
+
+    #[test]
+    fn get_valid_site_type() {
+        assert!(SiteType::from_str("basic") == Some(SiteType::Basic));
+    }
+
+    #[test]
+    fn get_invalid_site_type() {
+        assert!(SiteType::from_str("invalid") == None);
+    }
+
+    #[test]
     fn get_scope_for_valid_variant() {
         assert!(scope_for_variant(&SiteVariant::Password) ==
             Some(String::from("com.lyndir.masterpassword")));
