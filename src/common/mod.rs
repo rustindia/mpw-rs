@@ -20,33 +20,99 @@ pub mod scrypt_settings {
     pub const DK_LEN: usize = 64_usize;
 }
 
-pub fn scope_for_variant(site_variant: &str) -> Option<String> {
-    match site_variant {
-        "password" => Some(String::from("com.lyndir.masterpassword")),
-        "login" => Some(String::from("com.lyndir.masterpassword.login")),
-        "answer" => Some(String::from("com.lyndir.masterpassword.answer")),
-        _ => None
+#[derive(PartialEq, Eq)]
+pub enum SiteVariant {
+    Password,
+    Login,
+    Answer
+}
+
+impl SiteVariant {
+    pub fn from_str(s: &str) -> Option<SiteVariant> {
+        match s {
+            "p" | "password"
+            => Some(SiteVariant::Password),
+            "l" | "login"
+            => Some(SiteVariant::Login),
+            "a" | "answer"
+            => Some(SiteVariant::Answer),
+            _ => None
+        }
     }
 }
 
-pub fn template_for_type(site_type: &str, seed_byte: &u8) -> Option<String> {
-    let choice = match site_type {
-        "x" | "max" | "maximum" => Some(vec!["anoxxxxxxxxxxxxxxxxx", "axxxxxxxxxxxxxxxxxno"]),
-        "l" | "long" => Some(vec!["CvcvnoCvcvCvcv", "CvcvCvcvnoCvcv", "CvcvCvcvCvcvno",
-                                  "CvccnoCvcvCvcv", "CvccCvcvnoCvcv", "CvccCvcvCvcvno",
-                                  "CvcvnoCvccCvcv", "CvcvCvccnoCvcv", "CvcvCvccCvcvno",
-                                  "CvcvnoCvcvCvcc", "CvcvCvcvnoCvcc", "CvcvCvcvCvccno",
-                                  "CvccnoCvccCvcv", "CvccCvccnoCvcv", "CvccCvccCvcvno",
-                                  "CvcvnoCvccCvcc", "CvcvCvccnoCvcc", "CvcvCvccCvccno",
-                                  "CvccnoCvcvCvcc", "CvccCvcvnoCvcc", "CvccCvcvCvccno"]),
-        "m" | "med" | "medium" => Some(vec!["CvcnoCvc", "CvcCvcno"]),
-        "b" | "basic" => Some(vec!["aaanaaan", "aannaaan", "aaannaaa"]),
-        "s" | "short" => Some(vec!["Cvcn"]),
-        "i" | "pin" => Some(vec!["nnnn"]),
-        "n" | "name" => Some(vec!["cvccvcvcv"]),
-        "p" | "phrase" => Some(vec!["cvcc cvc cvccvcv cvc", "cvc cvccvcvcv cvcv",
-                                    "cv cvccv cvc cvcvccv"]),
-        _ => None
+#[derive(PartialEq, Eq)]
+pub enum SiteType {
+    Maximum,
+    Long,
+    Medium,
+    Basic,
+    Short,
+    PIN,
+    Name,
+    Phrase
+}
+
+impl SiteType {
+    pub fn from_str(s: &str) -> Option<SiteType> {
+        match s {
+            "x" | "max" | "maximum"
+            => Some(SiteType::Maximum),
+            "l" | "long"
+            => Some(SiteType::Long),
+            "m" | "med" | "medium"
+            => Some(SiteType::Medium),
+            "b" | "basic"
+            => Some(SiteType::Basic),
+            "s" | "short"
+            => Some(SiteType::Short),
+            "i" | "pin"
+            => Some(SiteType::PIN),
+            "n" | "name"
+            => Some(SiteType::Name),
+            "p" | "phrase"
+            => Some(SiteType::Phrase),
+            _ => None
+        }
+    }
+}
+
+pub fn scope_for_variant(site_variant: &SiteVariant) -> Option<String> {
+    match *site_variant {
+        SiteVariant::Password
+        => Some(String::from("com.lyndir.masterpassword")),
+        SiteVariant::Login
+        => Some(String::from("com.lyndir.masterpassword.login")),
+        SiteVariant::Answer
+        => Some(String::from("com.lyndir.masterpassword.answer"))
+    }
+}
+
+pub fn template_for_type(site_type: &SiteType, seed_byte: &u8) -> Option<String> {
+    let choice = match *site_type {
+        SiteType::Maximum
+        => Some(vec!["anoxxxxxxxxxxxxxxxxx", "axxxxxxxxxxxxxxxxxno"]),
+        SiteType::Long
+        => Some(vec!["CvcvnoCvcvCvcv", "CvcvCvcvnoCvcv", "CvcvCvcvCvcvno",
+                     "CvccnoCvcvCvcv", "CvccCvcvnoCvcv", "CvccCvcvCvcvno",
+                     "CvcvnoCvccCvcv", "CvcvCvccnoCvcv", "CvcvCvccCvcvno",
+                     "CvcvnoCvcvCvcc", "CvcvCvcvnoCvcc", "CvcvCvcvCvccno",
+                     "CvccnoCvccCvcv", "CvccCvccnoCvcv", "CvccCvccCvcvno",
+                     "CvcvnoCvccCvcc", "CvcvCvccnoCvcc", "CvcvCvccCvccno",
+                     "CvccnoCvcvCvcc", "CvccCvcvnoCvcc", "CvccCvcvCvccno"]),
+        SiteType::Medium
+        => Some(vec!["CvcnoCvc", "CvcCvcno"]),
+        SiteType::Basic
+        => Some(vec!["aaanaaan", "aannaaan", "aaannaaa"]),
+        SiteType::Short
+        => Some(vec!["Cvcn"]),
+        SiteType::PIN
+        => Some(vec!["nnnn"]),
+        SiteType::Name
+        => Some(vec!["cvccvcvcv"]),
+        SiteType::Phrase
+        => Some(vec!["cvcc cvc cvccvcv cvc", "cvc cvccvcvcv cvcv",
+                     "cv cvccv cvc cvcvccv"])
     };
 
     match choice {
@@ -88,25 +154,18 @@ pub fn u32_to_bytes(u: u32) -> [u8; 4] {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use common::{SiteType, SiteVariant};
 
     #[test]
     fn get_scope_for_valid_variant() {
-        assert!(scope_for_variant("password") == Some(String::from("com.lyndir.masterpassword")));
-    }
-
-    #[test]
-    fn get_scope_for_invalid_variant() {
-        assert!(scope_for_variant("invalid") == None);
+        assert!(scope_for_variant(&SiteVariant::Password) ==
+            Some(String::from("com.lyndir.masterpassword")));
     }
 
     #[test]
     fn get_template_for_valid_type() {
-        assert!(template_for_type("long", &(11 as u8)) == Some(String::from("CvcvCvcvCvccno")));
-    }
-
-    #[test]
-    fn get_template_for_invalid_type() {
-        assert!(template_for_type("invalid", &(11 as u8)) == None);
+        assert!(template_for_type(&SiteType::Long, &(11 as u8)) ==
+            Some(String::from("CvcvCvcvCvccno")));
     }
 
     #[test]

@@ -18,12 +18,13 @@ extern crate clap;
 mod helpers;
 
 use self::clap::{Arg, App};
+use common::{SiteVariant, SiteType};
 
 pub struct MpwOptions {
     pub site: String,
     pub user: String,
-    pub variant: String,
-    pub template: String,
+    pub variant: SiteVariant,
+    pub template: SiteType,
     pub counter: i32,
     pub algo: String,
     pub context: String
@@ -107,16 +108,16 @@ pub fn get_opts() -> MpwOptions {
     };
 
     let variant = match helpers::read_opt(&matches, "variant", "") {
-        Some(val) => val.to_string(),
-        None => "password".to_string()
+        Some(val) => SiteVariant::from_str(&val.to_string()),
+        None => SiteVariant::from_str("password")
     };
 
     let template = match helpers::read_opt(&matches, "type", "MP_SITETYPE") {
-        Some(val) => val.to_string(),
-        None => if variant == "password" {
-            "long".to_string()
-        } else if variant == "login" {
-            "name".to_string()
+        Some(val) => SiteType::from_str(&val.to_string()),
+        None => if variant == Some(SiteVariant::Password) {
+            SiteType::from_str("long")
+        } else if variant == Some(SiteVariant::Login) {
+            SiteType::from_str("name")
         } else {
             unimplemented!()
         }
@@ -140,8 +141,8 @@ pub fn get_opts() -> MpwOptions {
     MpwOptions {
         site: site,
         user: user,
-        variant: variant,
-        template: template,
+        variant: variant.unwrap(),
+        template: template.unwrap(),
         counter: counter,
         algo: algo,
         context: context

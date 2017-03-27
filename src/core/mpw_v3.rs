@@ -21,9 +21,9 @@ use self::ring_pwhash::scrypt::{scrypt, ScryptParams};
 use common;
 use common::scrypt_settings;
 
-pub fn master_key(full_name: &str, master_password: &str, site_variant: &str)
+pub fn master_key(full_name: &str, master_password: &str, site_variant: &common::SiteVariant)
                   -> Option<[u8; scrypt_settings::DK_LEN]> {
-    let scope = common::scope_for_variant(&site_variant);
+    let scope = common::scope_for_variant(site_variant);
 
     if scope.is_some() {
         let key_scope = scope.unwrap();
@@ -50,9 +50,9 @@ pub fn master_key(full_name: &str, master_password: &str, site_variant: &str)
 }
 
 pub fn password_for_site(master_key: &[u8; scrypt_settings::DK_LEN], site_name: &str,
-                         site_type: &str, site_counter: &i32, site_variant: &str,
+                         site_type: &common::SiteType, site_counter: &i32, site_variant: &common::SiteVariant,
                          site_context: &str) -> Option<String> {
-    let scope = common::scope_for_variant(&site_variant);
+    let scope = common::scope_for_variant(site_variant);
 
     if scope.is_some() {
         let site_scope = scope.unwrap();
@@ -98,10 +98,11 @@ pub fn password_for_site(master_key: &[u8; scrypt_settings::DK_LEN], site_name: 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use common::{SiteType, SiteVariant};
 
     #[test]
     fn get_master_key_for_password() {
-        let actual = master_key("test", "pass", "password").unwrap().to_vec();
+        let actual = master_key("test", "pass", &SiteVariant::Password).unwrap().to_vec();
 
         assert!(actual ==
             vec![
@@ -115,8 +116,9 @@ mod tests {
 
     #[test]
     fn get_master_password() {
-        let master_key = master_key("test", "pass", "password").unwrap();
-        let actual = password_for_site(&master_key, "site", "max", &(1 as i32), "password", "");
+        let master_key = master_key("test", "pass", &SiteVariant::Password).unwrap();
+        let actual = password_for_site(&master_key, "site", &SiteType::Maximum, &(1 as i32),
+                                       &SiteVariant::Password, "");
 
         assert!(actual == Some(String::from("QsKBWAYdT9dh^AOGVA0.")));
     }
