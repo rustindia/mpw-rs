@@ -93,8 +93,7 @@ pub fn get_opts() -> MpwOptions {
                                     Defaults to empty.\n\
                                         -v p, password | Doesn't currently use a context.\n\
                                         -v l, login    | Doesn't currently use a context.\n\
-                                        -v a, answer   | Empty for a universal site answer or\n\
-                                                       | the most significant word(s) of the question."))
+                                        -v a, answer   | Empty for a universal site answer or the most significant word(s) of the question."))
         .get_matches();
 
     let site = match helpers::read_opt(&matches, "site", "") {
