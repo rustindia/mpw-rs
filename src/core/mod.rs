@@ -15,11 +15,11 @@
 
 mod mpw_v3;
 
-use common::scrypt_settings::DK_LEN;
+use common::KEY_LENGTH;
 use common::{SiteType, SiteVariant};
 
 pub fn master_key_for_user(full_name: &str, master_password: &str, algo: &str,
-                           site_variant: &SiteVariant) -> Option<[u8; DK_LEN]> {
+                           site_variant: &SiteVariant) -> Option<[u8; KEY_LENGTH]> {
     match algo {
         "0" | "1" | "2" | "3" =>
             mpw_v3::master_key(full_name, master_password, site_variant),
@@ -27,7 +27,7 @@ pub fn master_key_for_user(full_name: &str, master_password: &str, algo: &str,
     }
 }
 
-pub fn password_for_site(master_key: &[u8; DK_LEN], site_name: &str, site_type: &SiteType,
+pub fn password_for_site(master_key: &[u8; KEY_LENGTH], site_name: &str, site_type: &SiteType,
                          site_counter: &i32, site_variant: &SiteVariant, site_context: &str,
                          algo: &str) -> Option<String> {
     match algo {

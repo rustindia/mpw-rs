@@ -1,5 +1,4 @@
 extern crate ring;
-extern crate ring_pwhash;
 
 // This file is part of Master Password.
 //
@@ -17,40 +16,31 @@ extern crate ring_pwhash;
 // along with Master Password. If not, see <http://www.gnu.org/licenses/>.
 
 use self::ring::{digest, hmac};
-use self::ring_pwhash::scrypt::{scrypt, ScryptParams};
 use common;
-use common::scrypt_settings;
 use common::{SiteVariant, SiteType};
 
 pub fn master_key(full_name: &str, master_password: &str, site_variant: &SiteVariant)
-                  -> Option<[u8; scrypt_settings::DK_LEN]> {
+                  -> Option<[u8; common::KEY_LENGTH]> {
     let scope = common::scope_for_variant(site_variant);
 
     if scope.is_some() {
         let key_scope = scope.unwrap();
-        let scrypt_params = ScryptParams::new(
-            scrypt_settings::N.log(2.0) as u8, scrypt_settings::R, scrypt_settings::P);
-        let mut digest: [u8; scrypt_settings::DK_LEN] = [0; scrypt_settings::DK_LEN];
         let mut master_key_salt = Vec::new();
 
         master_key_salt.extend_from_slice(key_scope.as_bytes());
         master_key_salt.extend_from_slice(&common::u32_to_bytes(full_name.len() as u32));
         master_key_salt.extend_from_slice(full_name.as_bytes());
 
-        scrypt(
+        Some(common::derive_key(
             master_password.as_bytes(),
-            master_key_salt.as_slice(),
-            &scrypt_params,
-            &mut digest
-        );
-
-        Some(digest)
+            master_key_salt.as_slice()
+        ))
     } else {
         None
     }
 }
 
-pub fn password_for_site(master_key: &[u8; scrypt_settings::DK_LEN], site_name: &str,
+pub fn password_for_site(master_key: &[u8; common::KEY_LENGTH], site_name: &str,
                          site_type: &SiteType, site_counter: &i32, site_variant: &SiteVariant,
                          site_context: &str) -> Option<String> {
     let scope = common::scope_for_variant(site_variant);
