@@ -14,7 +14,7 @@
 // along with Master Password. If not, see <http://www.gnu.org/licenses/>.
 
 mod mpw_v3;
-mod mpw_beta;
+mod mpw_next;
 
 use common::KEY_LENGTH;
 use common::{SiteType, SiteVariant};
@@ -24,8 +24,8 @@ pub fn master_key_for_user(full_name: &str, master_password: &str, algo: &str,
     match algo {
         "0" | "1" | "2" | "3" =>
             mpw_v3::master_key(full_name, master_password, site_variant),
-        "beta" =>
-            mpw_beta::master_key(full_name, master_password, site_variant),
+        "next" =>
+            mpw_next::master_key(full_name, master_password, site_variant),
         _ => None
     }
 }
@@ -34,7 +34,7 @@ pub fn password_for_site(master_key: &[u8; KEY_LENGTH], site_name: &str, site_ty
                          site_counter: &i32, site_variant: &SiteVariant, site_context: &str,
                          algo: &str) -> Option<String> {
     match algo {
-        "0" | "1" | "2" | "3" | "beta" =>
+        "0" | "1" | "2" | "3" | "next" =>
             mpw_v3::password_for_site(master_key, site_name, site_type, site_counter,
                                       site_variant, site_context),
         _ => None
