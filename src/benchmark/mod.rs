@@ -2,7 +2,6 @@ extern crate bcrypt;
 extern crate ring;
 extern crate sys_info;
 
-
 // This file is part of Master Password.
 //
 // Master Password is free software: you can redistribute it and/or modify
@@ -30,7 +29,7 @@ use core::password_for_site;
 fn calc_speed(elapsed: time::Duration, iterations: u32, operation: &str) -> f64 {
     let seconds = (elapsed.as_secs() as f64) + (elapsed.subsec_nanos() as f64 / 1000_000_000.0);
     let speed = iterations as f64 / seconds;
-    println!("Completed {} {} iterations in {} seconds at {:0.2} ops/s.",
+    println!(" * Completed {} {} iterations in {} seconds at {:0.2} ops/s.",
              iterations, operation, seconds, speed);
     speed
 }
@@ -98,9 +97,9 @@ pub fn mpw_bench() {
     let mpw_speed = calc_speed(start.elapsed(), iterations, job);
 
     println!("\nSummary for this machine:");
-    println!("* mpw is {} times slower than hmac-sha-256.", hmac_sha256_speed / mpw_speed);
-    println!("* mpw is {} times slower than bcrypt (cost 9).", bcrypt_9_speed / mpw_speed);
-    println!("* scrypt is {} times slower than bcrypt (cost 9).", bcrypt_9_speed / scrypt_speed);
+    println!(" * mpw is {} times slower than hmac-sha-256.", hmac_sha256_speed / mpw_speed);
+    println!(" * mpw is {} times slower than bcrypt (cost 9).", bcrypt_9_speed / mpw_speed);
+    println!(" * scrypt is {} times slower than bcrypt (cost 9).", bcrypt_9_speed / scrypt_speed);
 
     println!("\n<<< Benchmark complete >>>");
 }
