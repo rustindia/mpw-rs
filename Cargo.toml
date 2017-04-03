@@ -27,4 +27,3 @@ clap = "2"
 rpassword = "0.3.1"
 ring = "0.7"
 ring-pwhash = "0.1"
-sys-info = "*" # Only for benchmark

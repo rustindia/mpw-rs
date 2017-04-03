@@ -120,6 +120,7 @@ pub fn template_for_type(site_type: &SiteType, seed_byte: &u8) -> Option<String>
     }
 }
 
+#[inline(always)]
 pub fn character_from_class(class: u8, seed_byte: usize) -> Option<u8> {
     let choice = match class {
         b'V' => Some("AEIOU"),
@@ -141,6 +142,7 @@ pub fn character_from_class(class: u8, seed_byte: usize) -> Option<u8> {
     }
 }
 
+#[inline(always)]
 pub fn u32_to_bytes(u: u32) -> [u8; 4] {
     [
         ((u >> 24) & 0xff) as u8,

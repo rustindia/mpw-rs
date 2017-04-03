@@ -1,6 +1,5 @@
 extern crate bcrypt;
 extern crate ring;
-extern crate sys_info;
 
 // This file is part of Master Password.
 //
@@ -20,7 +19,6 @@ extern crate sys_info;
 use std::time;
 use self::ring::{digest, hmac};
 use self::bcrypt::hash;
-use self::sys_info::{os_type, os_release, cpu_num, cpu_speed, mem_info};
 use common::SiteType;
 use common::SiteVariant;
 use core::master_key_for_user;
@@ -32,39 +30,6 @@ fn calc_speed(elapsed: time::Duration, iterations: u32, operation: &str) -> f64 
     println!(" * Completed {} {} iterations in {} seconds at {:0.2} ops/s.",
              iterations, operation, seconds, speed);
     speed
-}
-
-fn show_sys_info() {
-    let os_type = match os_type() {
-        Ok(val) => val.to_string(),
-        Err(_) => String::from("unknown")
-    };
-
-    let os_release = match os_release() {
-        Ok(val) => val.to_string(),
-        Err(_) => String::from("unknown")
-    };
-
-    let cpu_num = match cpu_num() {
-        Ok(val) => val.to_string(),
-        Err(_) => String::from("unknown")
-    };
-
-    let cpu_speed = match cpu_speed() {
-        Ok(val) => val.to_string(),
-        Err(_) => String::from("unknown")
-    };
-
-    let mem_total = match mem_info() {
-        Ok(val) => (val.total / 1024).to_string(),
-        Err(_) => String::from("unknown")
-    };
-
-    println!("System Info:");
-    println!("OS: {} {}", os_type, os_release);
-    println!("CPU: {} cores at {} MHz/core", cpu_num, cpu_speed);
-    println!("Total Memory: {} MB", mem_total);
-    println!();
 }
 
 #[allow(unused_must_use)]
@@ -79,7 +44,6 @@ pub fn mpw_bench() {
     let algo = "3";
 
     println!("<<< Benchmarking Master Password >>>\n");
-    show_sys_info();
 
     let master_key = master_key_for_user(
         &full_name, &master_password, &algo, &site_variant).unwrap();
