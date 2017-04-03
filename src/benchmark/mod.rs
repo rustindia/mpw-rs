@@ -24,7 +24,7 @@ use common::SiteVariant;
 use core::master_key_for_user;
 use core::password_for_site;
 
-fn show_speed(elapsed: time::Duration, iterations: u32, operation: &str) -> f64 {
+fn calc_speed(elapsed: time::Duration, iterations: u32, operation: &str) -> f64 {
     let seconds = (elapsed.as_secs() as f64) + (elapsed.subsec_nanos() as f64 / 1000_000_000.0);
     let speed = iterations as f64 / seconds;
     println!("Performed {} {} iterations in {} seconds at {:0.2} ops/s.",
@@ -46,13 +46,6 @@ pub fn mpw_bench() {
     println!("<<< Benchmarking Master Password >>>\n");
 
     let master_key = master_key_for_user(
-        full_name,
-        master_password,
-        algo,
-        &site_variant
-    ).unwrap();
-
-    let master_key = master_key_for_user(
         &full_name, &master_password, &algo, &site_variant).unwrap();
     let iterations = 3_000_000;
     let job = "hmac-sha-256";
@@ -64,7 +57,7 @@ pub fn mpw_bench() {
             "".as_bytes()
         );
     }
-    let hmac_sha256_speed = show_speed(start.elapsed(), iterations, job);
+    let hmac_sha256_speed = calc_speed(start.elapsed(), iterations, job);
 
     let bcrypt_cost = 9;
     let iterations = 1000;
@@ -74,7 +67,7 @@ pub fn mpw_bench() {
     for _ in 1..iterations {
         hash(master_password, bcrypt_cost);
     }
-    let bcrypt_9_speed = show_speed(start.elapsed(), iterations, job);
+    let bcrypt_9_speed = calc_speed(start.elapsed(), iterations, job);
 
     let iterations = 50;
     let job = "scrypt_mpw";
@@ -83,7 +76,7 @@ pub fn mpw_bench() {
     for _ in 1..iterations {
         master_key_for_user(full_name, master_password, algo, &site_variant);
     }
-    let scrypt_speed = show_speed(start.elapsed(), iterations, job);
+    let scrypt_speed = calc_speed(start.elapsed(), iterations, job);
 
     let iterations = 50;
     let job = "mpw";
@@ -94,7 +87,12 @@ pub fn mpw_bench() {
         password_for_site(&key, site_name,
                           &site_type, &site_counter, &site_variant, &site_context, algo);
     }
-    let mpw_speed = show_speed(start.elapsed(), iterations, job);
+    let mpw_speed = calc_speed(start.elapsed(), iterations, job);
+
+    println!("\nSummary for this machine:");
+    println!("* mpw is {} times slower than hmac-sha-256.", hmac_sha256_speed / mpw_speed);
+    println!("* mpw is {} times slower than bcrypt (cost 9).", bcrypt_9_speed / mpw_speed);
+    println!("* scrypt is {} times slower than bcrypt (cost 9).", bcrypt_9_speed / scrypt_speed);
 
     println!("\n<<< Benchmark complete >>>");
 }
