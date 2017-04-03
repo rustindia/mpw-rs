@@ -11,3 +11,6 @@ This is the Rust version of the original found [here](https://github.com/Lyndir/
 ## Building, testing and running
 - `cargo test --release`
 - `cargo run --release`
+
+## Benchmarking
+- `cargo run --release -- --benchmark`
