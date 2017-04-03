@@ -19,6 +19,7 @@ mod arg_parse;
 mod identicon;
 mod core;
 mod common;
+mod benchmark;
 
 use std::io::{self, Write};
 use rpassword::read_password;
