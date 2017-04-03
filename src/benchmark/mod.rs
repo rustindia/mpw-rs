@@ -36,12 +36,12 @@ fn calc_speed(elapsed: time::Duration, iterations: u32, operation: &str) -> f64 
 
 fn show_sys_info() {
     let os_type = match os_type() {
-        Ok(val) => val,
+        Ok(val) => val.to_string(),
         Err(_) => String::from("unknown")
     };
 
     let os_release = match os_release() {
-        Ok(val) => val,
+        Ok(val) => val.to_string(),
         Err(_) => String::from("unknown")
     };
 
