@@ -24,13 +24,15 @@ use common::SiteVariant;
 use core::master_key_for_user;
 use core::password_for_site;
 
-fn show_speed(start: time::Instant, elapsed: time::Duration, iterations: u32, operation: &str) {
+fn show_speed(elapsed: time::Duration, iterations: u32, operation: &str) -> f64 {
     let seconds = (elapsed.as_secs() as f64) + (elapsed.subsec_nanos() as f64 / 1000_000_000.0);
     let speed = iterations as f64 / seconds;
-    println!("Results: {} {} iterations in {} seconds at {:0.2} ops/s",
+    println!("Performed {} {} iterations in {} seconds at {:0.2} ops/s.",
              iterations, operation, seconds, speed);
+    speed
 }
 
+#[allow(unused_must_use)]
 pub fn mpw_bench() {
     let full_name = "Robert Lee Mitchel";
     let master_password = "banana colored duckling";
@@ -62,7 +64,7 @@ pub fn mpw_bench() {
             "".as_bytes()
         );
     }
-    show_speed(start, start.elapsed(), iterations, job);
+    let hmac_sha256_speed = show_speed(start.elapsed(), iterations, job);
 
     let bcrypt_cost = 9;
     let iterations = 1000;
@@ -72,7 +74,7 @@ pub fn mpw_bench() {
     for _ in 1..iterations {
         hash(master_password, bcrypt_cost);
     }
-    let bcrypt_9_speed = show_speed(start, start.elapsed(), iterations, job);
+    let bcrypt_9_speed = show_speed(start.elapsed(), iterations, job);
 
     let iterations = 50;
     let job = "scrypt_mpw";
@@ -81,7 +83,18 @@ pub fn mpw_bench() {
     for _ in 1..iterations {
         master_key_for_user(full_name, master_password, algo, &site_variant);
     }
-    let scrypt_speed = show_speed(start, start.elapsed(), iterations, job);
+    let scrypt_speed = show_speed(start.elapsed(), iterations, job);
+
+    let iterations = 50;
+    let job = "mpw";
+    println!("Performing {} iterations of {}:", iterations, job);
+    let start = time::Instant::now();
+    for _ in 1..iterations {
+        let key = master_key_for_user(full_name, master_password, algo, &site_variant).unwrap();
+        password_for_site(&key, site_name,
+                          &site_type, &site_counter, &site_variant, &site_context, algo);
+    }
+    let mpw_speed = show_speed(start.elapsed(), iterations, job);
 
     println!("\n<<< Benchmark complete >>>");
 }
