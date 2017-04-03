@@ -74,5 +74,14 @@ pub fn mpw_bench() {
     }
     let bcrypt_9_speed = show_speed(start, start.elapsed(), iterations, job);
 
+    let iterations = 50;
+    let job = "scrypt_mpw";
+    println!("Performing {} iterations of {}:", iterations, job);
+    let start = time::Instant::now();
+    for _ in 1..iterations {
+        master_key_for_user(full_name, master_password, algo, &site_variant);
+    }
+    let scrypt_speed = show_speed(start, start.elapsed(), iterations, job);
+
     println!("\n<<< Benchmark complete >>>");
 }
