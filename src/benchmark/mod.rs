@@ -1,5 +1,7 @@
 extern crate bcrypt;
 extern crate ring;
+extern crate sys_info;
+
 
 // This file is part of Master Password.
 //
@@ -19,6 +21,7 @@ extern crate ring;
 use std::time;
 use self::ring::{digest, hmac};
 use self::bcrypt::hash;
+use self::sys_info::{os_type, os_release, cpu_num, cpu_speed, mem_info};
 use common::SiteType;
 use common::SiteVariant;
 use core::master_key_for_user;
@@ -27,7 +30,7 @@ use core::password_for_site;
 fn calc_speed(elapsed: time::Duration, iterations: u32, operation: &str) -> f64 {
     let seconds = (elapsed.as_secs() as f64) + (elapsed.subsec_nanos() as f64 / 1000_000_000.0);
     let speed = iterations as f64 / seconds;
-    println!("Performed {} {} iterations in {} seconds at {:0.2} ops/s.",
+    println!("Completed {} {} iterations in {} seconds at {:0.2} ops/s.",
              iterations, operation, seconds, speed);
     speed
 }
@@ -44,6 +47,11 @@ pub fn mpw_bench() {
     let algo = "3";
 
     println!("<<< Benchmarking Master Password >>>\n");
+    println!("System Info:");
+    println!("OS: {} {}", os_type().unwrap(), os_release().unwrap());
+    println!("CPU: {} cores at {} MHz/core", cpu_num().unwrap(), cpu_speed().unwrap());
+    println!("Total Memory: {} MB", mem_info().unwrap().total / 1024);
+    println!();
 
     let master_key = master_key_for_user(
         &full_name, &master_password, &algo, &site_variant).unwrap();
