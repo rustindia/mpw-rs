@@ -22,6 +22,7 @@ authors = [
 ]
 
 [dependencies]
+bcrypt = "0.1" # Only for benchmark
 clap = "2"
 rpassword = "0.3.1"
 ring = "0.7"

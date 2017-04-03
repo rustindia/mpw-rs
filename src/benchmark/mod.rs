@@ -1,3 +1,4 @@
+extern crate bcrypt;
 extern crate ring;
 
 // This file is part of Master Password.
@@ -17,6 +18,7 @@ extern crate ring;
 
 use std::time;
 use self::ring::{digest, hmac};
+use self::bcrypt::hash;
 use common::SiteType;
 use common::SiteVariant;
 use core::master_key_for_user;
@@ -25,7 +27,7 @@ use core::password_for_site;
 fn show_speed(start: time::Instant, elapsed: time::Duration, iterations: u32, operation: &str) {
     let seconds = (elapsed.as_secs() as f64) + (elapsed.subsec_nanos() as f64 / 1000_000_000.0);
     let speed = iterations as f64 / seconds;
-    println!("* {} {} iterations in {} seconds at {:0.2} ops/s",
+    println!("Results: {} {} iterations in {} seconds at {:0.2} ops/s",
              iterations, operation, seconds, speed);
 }
 
@@ -51,6 +53,8 @@ pub fn mpw_bench() {
     let master_key = master_key_for_user(
         &full_name, &master_password, &algo, &site_variant).unwrap();
     let iterations = 3_000_000;
+    let job = "hmac-sha-256";
+    println!("Performing {} iterations of {}:", iterations, job);
     let start = time::Instant::now();
     for _ in 1..iterations {
         hmac::sign(
@@ -58,7 +62,17 @@ pub fn mpw_bench() {
             "".as_bytes()
         );
     }
-    show_speed(start, start.elapsed(), iterations, "hmac-sha-256");
+    show_speed(start, start.elapsed(), iterations, job);
+
+    let bcrypt_cost = 9;
+    let iterations = 1000;
+    let job = "bcrypt9";
+    println!("Performing {} iterations of {}:", iterations, job);
+    let start = time::Instant::now();
+    for _ in 1..iterations {
+        hash(master_password, bcrypt_cost);
+    }
+    let bcrypt_9_speed = show_speed(start, start.elapsed(), iterations, job);
 
     println!("\n<<< Benchmark complete >>>");
 }
