@@ -1,4 +1,5 @@
 extern crate ring_pwhash;
+extern crate argon2rs;
 
 // This file is part of Master Password.
 //
@@ -16,6 +17,7 @@ extern crate ring_pwhash;
 // along with Master Password. If not, see <http://www.gnu.org/licenses/>.
 
 use self::ring_pwhash::scrypt::{scrypt, ScryptParams};
+use self::argon2rs::{Variant, Argon2};
 
 pub const KEY_LENGTH: usize = 64_usize;
 
@@ -162,6 +164,15 @@ pub fn derive_key(password: &[u8], salt: &[u8]) -> [u8; KEY_LENGTH] {
         &scrypt_params,
         &mut digest
     );
+
+    digest
+}
+
+pub fn derive_key_argon(password: &[u8], salt: &[u8]) -> [u8; KEY_LENGTH] {
+    let inst = Argon2::new(1, 4, 131072, Variant::Argon2i);
+    let mut digest: [u8; KEY_LENGTH] = [0; KEY_LENGTH];
+
+    inst.unwrap().hash(&mut digest, password, salt, &[], &[]);
 
     digest
 }
