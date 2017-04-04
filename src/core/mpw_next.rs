@@ -1,5 +1,3 @@
-extern crate ring;
-
 // This file is part of Master Password.
 //
 // Master Password is free software: you can redistribute it and/or modify
