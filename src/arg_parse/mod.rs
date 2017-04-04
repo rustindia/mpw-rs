@@ -52,6 +52,8 @@ pub fn get_opts() -> MpwOptions {
             .short("t")
             .long("type")
             .value_name("TYPE")
+            .possible_values(&["x", "max", "maximum", "l", "long", "m", "med", "medium", "b",
+                "basic", "s", "short", "i", "pin", "n", "name", "p", "phrase"])
             .help("Specify the template of the password.\n\
                                     Defaults to MP_SITETYPE in env or 'long' for password, 'name' for login.\n\
                                         x, max, maximum | 20 characters, contains symbols.\n\
@@ -74,6 +76,7 @@ pub fn get_opts() -> MpwOptions {
             .short("a")
             .long("algo")
             .value_name("ALGO")
+            .possible_values(&["0", "1", "2", "3", "next"])
             .help("The algorithm version to use.\n\
                                     Defaults to MP_ALGORITHM in env or 3.")
             .takes_value(true))
@@ -81,6 +84,7 @@ pub fn get_opts() -> MpwOptions {
             .short("v")
             .long("variant")
             .value_name("VARIANT")
+            .possible_values(&["p", "password", "l", "login", "a", "answer"])
             .help("The kind of content to generate.\n\
                                     Defaults to 'password'.\n\
                                         p, password | The password to log in with.\n\

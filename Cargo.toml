@@ -14,7 +14,7 @@
 # along with Master Password. If not, see <http://www.gnu.org/licenses/>.
 
 [package]
-name = "mpw-rs"
+name = "mpw"
 version = "2.4.0"
 description = """Master Password is an algorithm used to generate unique
 passwords for websites, email accounts, or anything else based only on easily
