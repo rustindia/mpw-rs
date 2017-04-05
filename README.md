@@ -14,3 +14,9 @@ This is the Rust version of the original found [here](https://github.com/Lyndir/
 
 ## Benchmarking
 - `cargo run --release -- --benchmark`
+
+## "Next" features
+To use the Argon2 based KDF instead of Scrypt:
+- `cargo run --release -- -a next`
+- **This should not be used for production** as the Argon2 params are experimental.
+- **This is only available in the Rust version**.

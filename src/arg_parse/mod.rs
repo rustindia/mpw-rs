@@ -46,7 +46,7 @@ pub fn get_opts() -> MpwOptions {
             .long("user")
             .value_name("USER")
             .help("Specify the full name of the user.\n\
-                                    Defaults to MP_FULLNAME in env")
+                Defaults to MP_FULLNAME in env")
             .takes_value(true))
         .arg(Arg::with_name("type")
             .short("t")
@@ -56,22 +56,22 @@ pub fn get_opts() -> MpwOptions {
                 "basic", "s", "short", "i", "pin", "n", "name", "p", "phrase"])
             .hide_possible_values(true)
             .help("Specify the template of the password.\n\
-                                    Defaults to MP_SITETYPE in env or 'long' for password, 'name' for login.\n\
-                                        x, max, maximum | 20 characters, contains symbols.\n\
-                                        l, long         | Copy-friendly, 14 characters, contains symbols.\n\
-                                        m, med, medium  | Copy-friendly, 8 characters, contains symbols.\n\
-                                        b, basic        | 8 characters, no symbols.\n\
-                                        s, short        | Copy-friendly, 4 characters, no symbols.\n\
-                                        i, pin          | 4 numbers.\n\
-                                        n, name         | 9 letter name.\n\
-                                        p, phrase       | 20 character sentence.")
+                Defaults to MP_SITETYPE in env or 'long' for password, 'name' for login.\n\
+                x, max, maximum | 20 characters, contains symbols.\n\
+                l, long         | Copy-friendly, 14 characters, contains symbols.\n\
+                m, med, medium  | Copy-friendly, 8 characters, contains symbols.\n\
+                b, basic        | 8 characters, no symbols.\n\
+                s, short        | Copy-friendly, 4 characters, no symbols.\n\
+                i, pin          | 4 numbers.\n\
+                n, name         | 9 letter name.\n\
+                p, phrase       | 20 character sentence.")
             .takes_value(true))
         .arg(Arg::with_name("counter")
             .short("c")
             .long("counter")
             .value_name("COUNTER")
             .help("The value of the counter.\n\
-                                    Defaults to MP_SITECOUNTER in env or 1.")
+                Defaults to MP_SITECOUNTER in env or 1.")
             .takes_value(true))
         .arg(Arg::with_name("algo")
             .short("a")
@@ -80,7 +80,8 @@ pub fn get_opts() -> MpwOptions {
             .possible_values(&["0", "1", "2", "3", "next"])
             .hide_possible_values(true)
             .help("The algorithm version to use.\n\
-                                    Defaults to MP_ALGORITHM in env or 3.")
+                Defaults to MP_ALGORITHM in env or 3.\n\
+                '-a next' uses the experimental Argon2 based algo.")
             .takes_value(true))
         .arg(Arg::with_name("variant")
             .short("v")
@@ -89,20 +90,20 @@ pub fn get_opts() -> MpwOptions {
             .possible_values(&["p", "password", "l", "login", "a", "answer"])
             .hide_possible_values(true)
             .help("The kind of content to generate.\n\
-                                    Defaults to 'password'.\n\
-                                        p, password | The password to log in with.\n\
-                                        l, login    | The username to log in as.\n\
-                                        a, answer   | The answer to a security question.")
+                Defaults to 'password'.\n\
+                p, password | The password to log in with.\n\
+                l, login    | The username to log in as.\n\
+                a, answer   | The answer to a security question.")
             .takes_value(true))
         .arg(Arg::with_name("context")
             .short("C")
             .long("context")
             .value_name("CONTEXT")
             .help("A variant-specific context.\n\
-                                    Defaults to empty.\n\
-                                        -v p, password | Doesn't currently use a context.\n\
-                                        -v l, login    | Doesn't currently use a context.\n\
-                                        -v a, answer   | Empty for a universal site answer or the most significant word(s) of the question."))
+                Defaults to empty.\n\
+                -v p, password | Doesn't currently use a context.\n\
+                -v l, login    | Doesn't currently use a context.\n\
+                -v a, answer   | Empty for a universal site answer or the most significant word(s) of the question."))
         .arg(Arg::with_name("benchmark")
             .short("b")
             .long("benchmark")
