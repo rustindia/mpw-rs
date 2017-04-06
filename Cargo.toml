@@ -39,9 +39,9 @@ codegen-units = 1
 panic = 'abort'
 
 [dependencies]
-argon2rs = "0.2.5" # Only for mpw_next
+argon2rs = "0.2" # Only for mpw_next
 bcrypt = "0.1"     # Only for benchmark
 clap = "2"
-rpassword = "0.3.1"
+rpassword = "0.3"
 ring = "0.7"
 ring-pwhash = "0.1"
