@@ -34,7 +34,6 @@ fn calc_speed(elapsed: time::Duration, iterations: u32) -> f64 {
     speed
 }
 
-#[allow(unused_must_use)]
 pub fn mpw_bench() {
     let full_name = "Robert Lee Mitchel";
     let master_password = "banana colored duckling";
@@ -65,7 +64,7 @@ pub fn mpw_bench() {
     println!("### Performing {} iterations of {}:", iterations, "bcrypt9");
     let start = time::Instant::now();
     for _ in 1..iterations {
-        hash(master_password, bcrypt_cost);
+        let _ = hash(master_password, bcrypt_cost);
     }
     let bcrypt_9_speed = calc_speed(start.elapsed(), iterations);
 
