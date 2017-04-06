@@ -32,23 +32,23 @@ fn main() {
     let password = read_password().unwrap();
 
     let identity = identicon::generate(&mpw_options.user, &password);
-    let master_key = match core::master_key_for_user(
-        &mpw_options.user, &password, &mpw_options.algo, &mpw_options.variant) {
+    let master_key = match core::master_key_for_user(&mpw_options.user,
+                                                     &password,
+                                                     &mpw_options.algo,
+                                                     &mpw_options.variant) {
         Some(val) => val,
-        None => panic!("Master Key Error")
+        None => panic!("Master Key Error"),
     };
 
-    let password = match core::password_for_site(
-        &master_key,
-        &mpw_options.site,
-        &mpw_options.template,
-        &mpw_options.counter,
-        &mpw_options.variant,
-        &mpw_options.context,
-        &mpw_options.algo
-    ) {
+    let password = match core::password_for_site(&master_key,
+                                                 &mpw_options.site,
+                                                 &mpw_options.template,
+                                                 &mpw_options.counter,
+                                                 &mpw_options.variant,
+                                                 &mpw_options.context,
+                                                 &mpw_options.algo) {
         Some(val) => val,
-        None => panic!("Password Error")
+        None => panic!("Password Error"),
     };
 
     println!("[ {} ]: {}", identity, password);

@@ -16,7 +16,9 @@
 use common;
 use common::SiteVariant;
 
-pub fn master_key(full_name: &str, master_password: &str, site_variant: &SiteVariant)
+pub fn master_key(full_name: &str,
+                  master_password: &str,
+                  site_variant: &SiteVariant)
                   -> Option<[u8; common::KEY_LENGTH]> {
     let scope = common::scope_for_variant(site_variant);
 
@@ -28,10 +30,7 @@ pub fn master_key(full_name: &str, master_password: &str, site_variant: &SiteVar
         master_key_salt.extend_from_slice(&common::u32_to_bytes(full_name.len() as u32));
         master_key_salt.extend_from_slice(full_name.as_bytes());
 
-        Some(common::derive_key_argon(
-            master_password.as_bytes(),
-            master_key_salt.as_slice()
-        ))
+        Some(common::derive_key_argon(master_password.as_bytes(), master_key_salt.as_slice()))
     } else {
         None
     }

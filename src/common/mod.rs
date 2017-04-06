@@ -25,19 +25,16 @@ pub const KEY_LENGTH: usize = 64_usize;
 pub enum SiteVariant {
     Password,
     Login,
-    Answer
+    Answer,
 }
 
 impl SiteVariant {
     pub fn from(s: &str) -> Option<SiteVariant> {
         match s {
-            "p" | "password"
-            => Some(SiteVariant::Password),
-            "l" | "login"
-            => Some(SiteVariant::Login),
-            "a" | "answer"
-            => Some(SiteVariant::Answer),
-            _ => None
+            "p" | "password" => Some(SiteVariant::Password),
+            "l" | "login" => Some(SiteVariant::Login),
+            "a" | "answer" => Some(SiteVariant::Answer),
+            _ => None,
         }
     }
 }
@@ -51,74 +48,72 @@ pub enum SiteType {
     Short,
     PIN,
     Name,
-    Phrase
+    Phrase,
 }
 
 impl SiteType {
     pub fn from(s: &str) -> Option<SiteType> {
         match s {
-            "x" | "max" | "maximum"
-            => Some(SiteType::Maximum),
-            "l" | "long"
-            => Some(SiteType::Long),
-            "m" | "med" | "medium"
-            => Some(SiteType::Medium),
-            "b" | "basic"
-            => Some(SiteType::Basic),
-            "s" | "short"
-            => Some(SiteType::Short),
-            "i" | "pin"
-            => Some(SiteType::PIN),
-            "n" | "name"
-            => Some(SiteType::Name),
-            "p" | "phrase"
-            => Some(SiteType::Phrase),
-            _ => None
+            "x" | "max" | "maximum" => Some(SiteType::Maximum),
+            "l" | "long" => Some(SiteType::Long),
+            "m" | "med" | "medium" => Some(SiteType::Medium),
+            "b" | "basic" => Some(SiteType::Basic),
+            "s" | "short" => Some(SiteType::Short),
+            "i" | "pin" => Some(SiteType::PIN),
+            "n" | "name" => Some(SiteType::Name),
+            "p" | "phrase" => Some(SiteType::Phrase),
+            _ => None,
         }
     }
 }
 
 pub fn scope_for_variant(site_variant: &SiteVariant) -> Option<String> {
     match *site_variant {
-        SiteVariant::Password
-        => Some(String::from("com.lyndir.masterpassword")),
-        SiteVariant::Login
-        => Some(String::from("com.lyndir.masterpassword.login")),
-        SiteVariant::Answer
-        => Some(String::from("com.lyndir.masterpassword.answer"))
+        SiteVariant::Password => Some(String::from("com.lyndir.masterpassword")),
+        SiteVariant::Login => Some(String::from("com.lyndir.masterpassword.login")),
+        SiteVariant::Answer => Some(String::from("com.lyndir.masterpassword.answer")),
     }
 }
 
 pub fn template_for_type(site_type: &SiteType, seed_byte: &u8) -> Option<String> {
     let choice = match *site_type {
-        SiteType::Maximum
-        => Some(vec!["anoxxxxxxxxxxxxxxxxx", "axxxxxxxxxxxxxxxxxno"]),
-        SiteType::Long
-        => Some(vec!["CvcvnoCvcvCvcv", "CvcvCvcvnoCvcv", "CvcvCvcvCvcvno",
-                     "CvccnoCvcvCvcv", "CvccCvcvnoCvcv", "CvccCvcvCvcvno",
-                     "CvcvnoCvccCvcv", "CvcvCvccnoCvcv", "CvcvCvccCvcvno",
-                     "CvcvnoCvcvCvcc", "CvcvCvcvnoCvcc", "CvcvCvcvCvccno",
-                     "CvccnoCvccCvcv", "CvccCvccnoCvcv", "CvccCvccCvcvno",
-                     "CvcvnoCvccCvcc", "CvcvCvccnoCvcc", "CvcvCvccCvccno",
-                     "CvccnoCvcvCvcc", "CvccCvcvnoCvcc", "CvccCvcvCvccno"]),
-        SiteType::Medium
-        => Some(vec!["CvcnoCvc", "CvcCvcno"]),
-        SiteType::Basic
-        => Some(vec!["aaanaaan", "aannaaan", "aaannaaa"]),
-        SiteType::Short
-        => Some(vec!["Cvcn"]),
-        SiteType::PIN
-        => Some(vec!["nnnn"]),
-        SiteType::Name
-        => Some(vec!["cvccvcvcv"]),
-        SiteType::Phrase
-        => Some(vec!["cvcc cvc cvccvcv cvc", "cvc cvccvcvcv cvcv",
-                     "cv cvccv cvc cvcvccv"])
+        SiteType::Maximum => Some(vec!["anoxxxxxxxxxxxxxxxxx", "axxxxxxxxxxxxxxxxxno"]),
+        SiteType::Long => {
+            Some(vec!["CvcvnoCvcvCvcv",
+                      "CvcvCvcvnoCvcv",
+                      "CvcvCvcvCvcvno",
+                      "CvccnoCvcvCvcv",
+                      "CvccCvcvnoCvcv",
+                      "CvccCvcvCvcvno",
+                      "CvcvnoCvccCvcv",
+                      "CvcvCvccnoCvcv",
+                      "CvcvCvccCvcvno",
+                      "CvcvnoCvcvCvcc",
+                      "CvcvCvcvnoCvcc",
+                      "CvcvCvcvCvccno",
+                      "CvccnoCvccCvcv",
+                      "CvccCvccnoCvcv",
+                      "CvccCvccCvcvno",
+                      "CvcvnoCvccCvcc",
+                      "CvcvCvccnoCvcc",
+                      "CvcvCvccCvccno",
+                      "CvccnoCvcvCvcc",
+                      "CvccCvcvnoCvcc",
+                      "CvccCvcvCvccno"])
+        }
+        SiteType::Medium => Some(vec!["CvcnoCvc", "CvcCvcno"]),
+        SiteType::Basic => Some(vec!["aaanaaan", "aannaaan", "aaannaaa"]),
+        SiteType::Short => Some(vec!["Cvcn"]),
+        SiteType::PIN => Some(vec!["nnnn"]),
+        SiteType::Name => Some(vec!["cvccvcvcv"]),
+        SiteType::Phrase => {
+            Some(vec!["cvcc cvc cvccvcv cvc", "cvc cvccvcvcv cvcv", "cv cvccv cvc cvcvccv"])
+        }
     };
 
     match choice {
         Some(val) => Some(String::from(val[*seed_byte as usize % val.len()])),
-        None => None
+        None => None,
     }
 }
 
@@ -135,35 +130,25 @@ pub fn character_from_class(class: u8, seed_byte: usize) -> Option<u8> {
         b'o' => Some("@&%?,=[]_:-+*$#!'^~;()/."),
         b'x' => Some("AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz0123456789!@#$%^&*()"),
         b' ' => Some(" "),
-        _ => None
+        _ => None,
     };
 
     match choice {
         Some(val) => Some(val.as_bytes()[seed_byte % val.len()]),
-        None => None
+        None => None,
     }
 }
 
 #[inline(always)]
 pub fn u32_to_bytes(u: u32) -> [u8; 4] {
-    [
-        ((u >> 24) & 0xff) as u8,
-        ((u >> 16) & 0xff) as u8,
-        ((u >> 8) & 0xff) as u8,
-        (u & 0xff) as u8
-    ]
+    [((u >> 24) & 0xff) as u8, ((u >> 16) & 0xff) as u8, ((u >> 8) & 0xff) as u8, (u & 0xff) as u8]
 }
 
 pub fn derive_key(password: &[u8], salt: &[u8]) -> [u8; KEY_LENGTH] {
     let scrypt_params = ScryptParams::new(32768_f64.log(2.0) as u8, 8_u32, 2_u32);
     let mut digest: [u8; KEY_LENGTH] = [0; KEY_LENGTH];
 
-    scrypt(
-        password,
-        salt,
-        &scrypt_params,
-        &mut digest
-    );
+    scrypt(password, salt, &scrypt_params, &mut digest);
 
     digest
 }
@@ -205,13 +190,13 @@ mod tests {
     #[test]
     fn get_scope_for_valid_variant() {
         assert!(scope_for_variant(&SiteVariant::Password) ==
-            Some(String::from("com.lyndir.masterpassword")));
+                Some(String::from("com.lyndir.masterpassword")));
     }
 
     #[test]
     fn get_template_for_valid_type() {
         assert!(template_for_type(&SiteType::Long, &(11 as u8)) ==
-            Some(String::from("CvcvCvcvCvccno")));
+                Some(String::from("CvcvCvcvCvccno")));
     }
 
     #[test]

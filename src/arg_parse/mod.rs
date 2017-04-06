@@ -29,7 +29,7 @@ pub struct MpwOptions {
     pub template: SiteType,
     pub counter: i32,
     pub algo: String,
-    pub context: String
+    pub context: String,
 }
 
 pub fn get_opts() -> MpwOptions {
@@ -38,24 +38,25 @@ pub fn get_opts() -> MpwOptions {
         .author("Rahul De <rahul080327@gmail.com>, Maarten Billemont <lhunath@lyndir.com>")
         .about("The rusty, stateless password manager")
         .arg(Arg::with_name("site")
-            .index(1)
-            .value_name("SITE")
-            .help("The name of the website."))
+                 .index(1)
+                 .value_name("SITE")
+                 .help("The name of the website."))
         .arg(Arg::with_name("user")
-            .short("u")
-            .long("user")
-            .value_name("USER")
-            .help("Specify the full name of the user.\n\
+                 .short("u")
+                 .long("user")
+                 .value_name("USER")
+                 .help("Specify the full name of the user.\n\
                 Defaults to MP_FULLNAME in env")
-            .takes_value(true))
+                 .takes_value(true))
         .arg(Arg::with_name("type")
-            .short("t")
-            .long("type")
-            .value_name("TYPE")
-            .possible_values(&["x", "max", "maximum", "l", "long", "m", "med", "medium", "b",
-                "basic", "s", "short", "i", "pin", "n", "name", "p", "phrase"])
-            .hide_possible_values(true)
-            .help("Specify the template of the password.\n\
+                 .short("t")
+                 .long("type")
+                 .value_name("TYPE")
+                 .possible_values(&["x", "max", "maximum", "l", "long", "m", "med",
+                                    "medium", "b", "basic", "s", "short", "i", "pin", "n",
+                                    "name", "p", "phrase"])
+                 .hide_possible_values(true)
+                 .help("Specify the template of the password.\n\
                 Defaults to MP_SITETYPE in env or 'long' for password, 'name' for login.\n\
                 x, max, maximum | 20 characters, contains symbols.\n\
                 l, long         | Copy-friendly, 14 characters, contains symbols.\n\
@@ -65,50 +66,51 @@ pub fn get_opts() -> MpwOptions {
                 i, pin          | 4 numbers.\n\
                 n, name         | 9 letter name.\n\
                 p, phrase       | 20 character sentence.")
-            .takes_value(true))
+                 .takes_value(true))
         .arg(Arg::with_name("counter")
-            .short("c")
-            .long("counter")
-            .value_name("COUNTER")
-            .help("The value of the counter.\n\
+                 .short("c")
+                 .long("counter")
+                 .value_name("COUNTER")
+                 .help("The value of the counter.\n\
                 Defaults to MP_SITECOUNTER in env or 1.")
-            .takes_value(true))
+                 .takes_value(true))
         .arg(Arg::with_name("algo")
-            .short("a")
-            .long("algo")
-            .value_name("ALGO")
-            .possible_values(&["0", "1", "2", "3", "next"])
-            .hide_possible_values(true)
-            .help("The algorithm version to use.\n\
+                 .short("a")
+                 .long("algo")
+                 .value_name("ALGO")
+                 .possible_values(&["0", "1", "2", "3", "next"])
+                 .hide_possible_values(true)
+                 .help("The algorithm version to use.\n\
                 Defaults to MP_ALGORITHM in env or 3.\n\
                 '-a next' uses the experimental Argon2 based algo.")
-            .takes_value(true))
+                 .takes_value(true))
         .arg(Arg::with_name("variant")
-            .short("v")
-            .long("variant")
-            .value_name("VARIANT")
-            .possible_values(&["p", "password", "l", "login", "a", "answer"])
-            .hide_possible_values(true)
-            .help("The kind of content to generate.\n\
+                 .short("v")
+                 .long("variant")
+                 .value_name("VARIANT")
+                 .possible_values(&["p", "password", "l", "login", "a", "answer"])
+                 .hide_possible_values(true)
+                 .help("The kind of content to generate.\n\
                 Defaults to 'password'.\n\
                 p, password | The password to log in with.\n\
                 l, login    | The username to log in as.\n\
                 a, answer   | The answer to a security question.")
-            .takes_value(true))
+                 .takes_value(true))
         .arg(Arg::with_name("context")
-            .short("C")
-            .long("context")
-            .value_name("CONTEXT")
-            .help("A variant-specific context.\n\
+                 .short("C")
+                 .long("context")
+                 .value_name("CONTEXT")
+                 .help("A variant-specific context.\n\
                 Defaults to empty.\n\
                 -v p, password | Doesn't currently use a context.\n\
                 -v l, login    | Doesn't currently use a context.\n\
-                -v a, answer   | Empty for a universal site answer or the most significant word(s) of the question."))
+                -v a, answer   | Empty for a universal site answer or the most significant \
+                word(s) of the question."))
         .arg(Arg::with_name("benchmark")
-            .short("b")
-            .long("benchmark")
-            .help("Benchmarks this program")
-            .takes_value(false))
+                 .short("b")
+                 .long("benchmark")
+                 .help("Benchmarks this program")
+                 .takes_value(false))
         .get_matches();
 
     if matches.is_present("benchmark") {
@@ -118,53 +120,55 @@ pub fn get_opts() -> MpwOptions {
 
     let site = match helpers::read_opt(&matches, "site", "") {
         Some(val) => val.to_string(),
-        None => match helpers::raw_input("Site Name: ") {
-            Some(val)
-            => val,
-            None
-            => panic!("Can't read STDIN")
+        None => {
+            match helpers::raw_input("Site Name: ") {
+                Some(val) => val,
+                None => panic!("Can't read STDIN"),
+            }
         }
     };
 
     let user = match helpers::read_opt(&matches, "user", "MP_FULLNAME") {
         Some(val) => val.to_string(),
-        None => match helpers::raw_input("Site Name: ") {
-            Some(val)
-            => val,
-            None
-            => panic!("Can't read STDIN")
+        None => {
+            match helpers::raw_input("Site Name: ") {
+                Some(val) => val,
+                None => panic!("Can't read STDIN"),
+            }
         }
     };
 
     let variant = match helpers::read_opt(&matches, "variant", "") {
         Some(val) => SiteVariant::from(&val.to_string()),
-        None => SiteVariant::from("password")
+        None => SiteVariant::from("password"),
     };
 
     let template = match helpers::read_opt(&matches, "type", "MP_SITETYPE") {
         Some(val) => SiteType::from(&val.to_string()),
-        None => if variant == Some(SiteVariant::Password) {
-            SiteType::from("long")
-        } else if variant == Some(SiteVariant::Login) {
-            SiteType::from("name")
-        } else {
-            unimplemented!()
+        None => {
+            if variant == Some(SiteVariant::Password) {
+                SiteType::from("long")
+            } else if variant == Some(SiteVariant::Login) {
+                SiteType::from("name")
+            } else {
+                unimplemented!()
+            }
         }
     };
 
     let counter = match helpers::read_opt(&matches, "counter", "MP_SITECOUNTER") {
         Some(val) => val.parse::<i32>().unwrap(),
-        None => 1
+        None => 1,
     };
 
     let algo = match helpers::read_opt(&matches, "algo", "MP_ALGORITHM") {
         Some(val) => val.to_string(),
-        None => "3".to_string()
+        None => "3".to_string(),
     };
 
     let context = match helpers::read_opt(&matches, "context", "") {
         Some(val) => val.to_string(),
-        None => String::new()
+        None => String::new(),
     };
 
     MpwOptions {
@@ -174,6 +178,6 @@ pub fn get_opts() -> MpwOptions {
         template: template.unwrap(),
         counter: counter,
         algo: algo,
-        context: context
+        context: context,
     }
 }

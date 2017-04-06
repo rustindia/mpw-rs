@@ -19,7 +19,9 @@ use self::ring::{digest, hmac};
 use common;
 use common::{SiteVariant, SiteType};
 
-pub fn master_key(full_name: &str, master_password: &str, site_variant: &SiteVariant)
+pub fn master_key(full_name: &str,
+                  master_password: &str,
+                  site_variant: &SiteVariant)
                   -> Option<[u8; common::KEY_LENGTH]> {
     let scope = common::scope_for_variant(site_variant);
 
@@ -31,18 +33,19 @@ pub fn master_key(full_name: &str, master_password: &str, site_variant: &SiteVar
         master_key_salt.extend_from_slice(&common::u32_to_bytes(full_name.len() as u32));
         master_key_salt.extend_from_slice(full_name.as_bytes());
 
-        Some(common::derive_key(
-            master_password.as_bytes(),
-            master_key_salt.as_slice()
-        ))
+        Some(common::derive_key(master_password.as_bytes(), master_key_salt.as_slice()))
     } else {
         None
     }
 }
 
-pub fn password_for_site(master_key: &[u8; common::KEY_LENGTH], site_name: &str,
-                         site_type: &SiteType, site_counter: &i32, site_variant: &SiteVariant,
-                         site_context: &str) -> Option<String> {
+pub fn password_for_site(master_key: &[u8; common::KEY_LENGTH],
+                         site_name: &str,
+                         site_type: &SiteType,
+                         site_counter: &i32,
+                         site_variant: &SiteVariant,
+                         site_context: &str)
+                         -> Option<String> {
     let scope = common::scope_for_variant(site_variant);
 
     if scope.is_some() {
@@ -69,13 +72,16 @@ pub fn password_for_site(master_key: &[u8; common::KEY_LENGTH], site_name: &str,
             let password = template_bytes
                 .iter()
                 .zip(1..template_bytes.len() + 1)
-                .map(|pair| common::character_from_class(
-                    *pair.0, site_password_seed[pair.1] as usize))
+                .map(|pair| {
+                         common::character_from_class(*pair.0, site_password_seed[pair.1] as usize)
+                     })
                 .collect::<Vec<Option<u8>>>();
 
-            if password.iter().any(|c| c.is_none()) { None } else {
-                Some(String::from_utf8(password
-                    .iter().map(|c| c.unwrap()).collect::<Vec<u8>>()).unwrap())
+            if password.iter().any(|c| c.is_none()) {
+                None
+            } else {
+                Some(String::from_utf8(password.iter().map(|c| c.unwrap()).collect::<Vec<u8>>())
+                         .unwrap())
             }
         } else {
             None
@@ -92,23 +98,26 @@ mod tests {
 
     #[test]
     fn get_master_key_for_password() {
-        let actual = master_key("test", "pass", &SiteVariant::Password).unwrap().to_vec();
+        let actual = master_key("test", "pass", &SiteVariant::Password)
+            .unwrap()
+            .to_vec();
 
         assert!(actual ==
-            vec![
-                51, 253, 82, 252, 68, 97, 191, 162, 127, 73, 153, 160, 52, 128, 204, 4, 183, 190,
-                106, 180, 68, 126, 100, 94, 132, 141, 99, 143, 106, 211, 94, 245, 245, 255, 195, 72,
-                28, 128, 197, 51, 99, 27, 125, 24, 54, 193, 223, 230, 118, 181, 225, 236, 171, 104,
-                9, 158, 214, 23, 166, 89, 36, 174, 64, 112
-            ]
-        );
+                vec![51, 253, 82, 252, 68, 97, 191, 162, 127, 73, 153, 160, 52, 128, 204, 4, 183,
+                     190, 106, 180, 68, 126, 100, 94, 132, 141, 99, 143, 106, 211, 94, 245, 245,
+                     255, 195, 72, 28, 128, 197, 51, 99, 27, 125, 24, 54, 193, 223, 230, 118,
+                     181, 225, 236, 171, 104, 9, 158, 214, 23, 166, 89, 36, 174, 64, 112]);
     }
 
     #[test]
     fn get_master_password() {
         let master_key = master_key("test", "pass", &SiteVariant::Password).unwrap();
-        let actual = password_for_site(&master_key, "site", &SiteType::Maximum, &(1 as i32),
-                                       &SiteVariant::Password, "");
+        let actual = password_for_site(&master_key,
+                                       "site",
+                                       &SiteType::Maximum,
+                                       &(1 as i32),
+                                       &SiteVariant::Password,
+                                       "");
 
         assert!(actual == Some(String::from("QsKBWAYdT9dh^AOGVA0.")));
     }
