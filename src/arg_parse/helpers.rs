@@ -20,25 +20,28 @@ use std::io::{self, Write};
 
 pub fn read_opt(matches: &clap::ArgMatches, name: &str, env_var: &str) -> Option<String> {
     match matches.value_of(name) {
-        Some(value) => Some(value.to_string()),
-        None => match env::var(env_var) {
-            Ok(val) => Some(val),
-            Err(_) => None
+        Some(value)
+        => Some(value.to_string()),
+        None
+        => match env::var(env_var) {
+            Ok(val)
+            => Some(val),
+            Err(_)
+            => None
         }
     }
 }
 
-#[allow(unused_must_use)]
-pub fn raw_input(prompt: &str) -> String {
+pub fn raw_input(prompt: &str) -> Option<String> {
     let mut buffer = String::new();
 
-    // TODO: Propagate IO errors in Monad style
     print!("{}", prompt);
-    io::stdout().flush();
-    io::stdin()
-        .read_line(&mut buffer)
-        .ok()
-        .unwrap();
+    let _ = io::stdout().flush();
 
-    buffer.trim().to_string()
+    match io::stdin().read_line(&mut buffer) {
+        Ok(_)
+        => Some(buffer.trim().to_string()),
+        Err(_)
+        => None
+    }
 }

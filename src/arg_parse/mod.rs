@@ -118,12 +118,22 @@ pub fn get_opts() -> MpwOptions {
 
     let site = match helpers::read_opt(&matches, "site", "") {
         Some(val) => val.to_string(),
-        None => helpers::raw_input("Site Name: ")
+        None => match helpers::raw_input("Site Name: ") {
+            Some(val)
+            => val,
+            None
+            => panic!("Can't read STDIN")
+        }
     };
 
     let user = match helpers::read_opt(&matches, "user", "MP_FULLNAME") {
         Some(val) => val.to_string(),
-        None => helpers::raw_input("Your full name: ")
+        None => match helpers::raw_input("Site Name: ") {
+            Some(val)
+            => val,
+            None
+            => panic!("Can't read STDIN")
+        }
     };
 
     let variant = match helpers::read_opt(&matches, "variant", "") {

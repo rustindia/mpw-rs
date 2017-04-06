@@ -24,12 +24,11 @@ mod benchmark;
 use std::io::{self, Write};
 use rpassword::read_password;
 
-#[allow(unused_must_use)]
 fn main() {
     let mpw_options = arg_parse::get_opts();
 
     print!("Your master password: ");
-    io::stdout().flush();
+    let _ = io::stdout().flush();
     let password = read_password().unwrap();
 
     let identity = identicon::generate(&mpw_options.user, &password);
