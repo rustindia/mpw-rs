@@ -1,4 +1,5 @@
 extern crate clap;
+extern crate rustyline;
 
 // This file is part of Master Password.
 //
@@ -16,7 +17,8 @@ extern crate clap;
 // along with Master Password. If not, see <http://www.gnu.org/licenses/>.
 
 use std::env;
-use std::io::{self, Write};
+use self::rustyline::error::ReadlineError;
+use self::rustyline::Editor;
 
 pub fn read_opt(matches: &clap::ArgMatches, name: &str, env_var: &str) -> Option<String> {
     match matches.value_of(name) {
@@ -31,13 +33,22 @@ pub fn read_opt(matches: &clap::ArgMatches, name: &str, env_var: &str) -> Option
 }
 
 pub fn raw_input(prompt: &str) -> Option<String> {
-    let mut buffer = String::new();
+    let mut rl = Editor::<()>::new();
+    let read_line = rl.readline(prompt);
 
-    print!("{}", prompt);
-    let _ = io::stdout().flush();
-
-    match io::stdin().read_line(&mut buffer) {
-        Ok(_) => Some(buffer.trim().to_string()),
-        Err(_) => None,
+    match read_line {
+        Ok(line) => Some(line),
+        Err(ReadlineError::Interrupted) => {
+            println!("Interrupted");
+            None
+        }
+        Err(ReadlineError::Eof) => {
+            println!("EOF Reached");
+            None
+        }
+        Err(err) => {
+            println!("Reading Error: {:?}", err);
+            None
+        }
     }
 }
