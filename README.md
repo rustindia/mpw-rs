@@ -4,6 +4,7 @@
 # [Master Password •••|](http://masterpasswordapp.com)
 
 This is the Rust version of the original found [here](https://github.com/Lyndir/MasterPassword).
+This can be used as a **drop-in replacement for the reference C version**, offering greater runtime safety and memory leaks protection with at-par performance.
 
 ## Requirements
 - [Rust](https://www.rust-lang.org/en-US/install.html) 1.15+
