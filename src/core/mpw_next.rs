@@ -22,6 +22,8 @@ pub fn master_key(full_name: &str,
                   -> Option<[u8; common::KEY_LENGTH]> {
     let scope = common::scope_for_variant(site_variant);
 
+    println!("Using Argon2 for KDF");
+
     if scope.is_some() {
         let key_scope = scope.unwrap();
         let mut master_key_salt = Vec::new();
