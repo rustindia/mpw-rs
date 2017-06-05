@@ -1,4 +1,4 @@
-[![license](https://img.shields.io/badge/license-GPLv3-blue.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+[![license](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 [![Build Status](https://travis-ci.org/lispyclouds/mpw-rs.svg?branch=master)](https://travis-ci.org/lispyclouds/mpw-rs)
 [![Crates.io](https://meritbadge.herokuapp.com/mpw-rs)](https://crates.io/crates/mpw-rs)
 
