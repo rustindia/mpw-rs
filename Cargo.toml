@@ -28,6 +28,13 @@ authors = [
     "Rahul De <rahul080327@gmail.com>",
     "Maarten Billemont <lhunath@lyndir.com>"
 ]
+keywords = [
+    "cryptography",
+    "password-manager",
+    "security",
+    "stateless",
+    "password"
+]
 
 [profile.release]
 opt-level = 3
@@ -46,3 +53,6 @@ rpassword = "0.4"
 ring = "0.9"
 ring-pwhash = "0.2"
 rustyline = "1.0"
+
+[badges]
+travis-ci = { repository = "https://travis-ci.org/lispyclouds/mpw-rs" }
