@@ -16,6 +16,11 @@ This can be used as a **drop-in replacement for the reference C version**, offer
 ## Benchmarking
 - `cargo run --release -- --benchmark`
 
+## Installing via Cargo
+- Make sure **Rust 1.15+** is installed.
+- Run `cargo install mpw-rs`
+- It will be available on PATH as `mpw-rs` for the current user. 
+
 ## "Next" features
 To use the Argon2 based KDF instead of Scrypt:
 - `cargo run --release -- -a next`
