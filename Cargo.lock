@@ -1,5 +1,5 @@
 [root]
-name = "mpw"
+name = "mpw-rs"
 version = "2.4.0"
 dependencies = [
  "argon2rs 0.2.5 (registry+https://github.com/rust-lang/crates.io-index)",
