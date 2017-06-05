@@ -55,4 +55,4 @@ ring-pwhash = "0.2"
 rustyline = "1.0"
 
 [badges]
-travis-ci = { repository = "https://travis-ci.org/lispyclouds/mpw-rs" }
+travis-ci = { repository = "lispyclouds/mpw-rs" }
