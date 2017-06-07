@@ -54,6 +54,7 @@ ring = "0.9"
 ring-pwhash = "0.2"
 rustyline = "1.0"
 rusqlite = "0.12.0"
+libsqlite3-sys = "0.8.0"
 
 [badges]
 travis-ci = { repository = "lispyclouds/mpw-rs" }

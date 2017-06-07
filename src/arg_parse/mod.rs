@@ -113,6 +113,11 @@ pub fn get_opts() -> MpwOptions {
                  .long("benchmark")
                  .help("Benchmarks this program")
                  .takes_value(false))
+        .arg(Arg::with_name("save")
+            .short("s")
+            .long("save")
+            .help("Saves the current counter value for the site")
+            .takes_value(false))
         .get_matches();
 
     if matches.is_present("benchmark") {
@@ -173,7 +178,7 @@ pub fn get_opts() -> MpwOptions {
         None => String::new(),
     };
 
-    let mpwOptions = MpwOptions {
+    let mpw_options = MpwOptions {
         site: site,
         user: user,
         variant: variant.unwrap(),
@@ -182,5 +187,11 @@ pub fn get_opts() -> MpwOptions {
         algo: algo,
         context: context,
     };
-    store::saveToSqlLite(mpwOptions)
+
+    if matches.is_present("save") {
+        store::save_to_sql_lite(mpw_options)
+    }
+    else {
+        mpw_options
+    }
 }
