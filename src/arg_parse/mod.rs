@@ -16,12 +16,14 @@ extern crate clap;
 // along with Master Password. If not, see <http://www.gnu.org/licenses/>.
 
 mod helpers;
+mod store;
 
 use std::process;
 use self::clap::{Arg, App};
 use common::{SiteVariant, SiteType};
 use benchmark::mpw_bench;
 
+#[derive(Debug)]
 pub struct MpwOptions {
     pub site: String,
     pub user: String,
@@ -111,6 +113,11 @@ pub fn get_opts() -> MpwOptions {
                  .long("benchmark")
                  .help("Benchmarks this program")
                  .takes_value(false))
+        .arg(Arg::with_name("save")
+            .short("s")
+            .long("save")
+            .help("Saves the current counter value for the site")
+            .takes_value(false))
         .get_matches();
 
     if matches.is_present("benchmark") {
@@ -131,7 +138,7 @@ pub fn get_opts() -> MpwOptions {
     let user = match helpers::read_opt(&matches, "user", "MP_FULLNAME") {
         Some(val) => val.to_string(),
         None => {
-            match helpers::raw_input("Site Name: ") {
+            match helpers::raw_input("Full Name: ") {
                 Some(val) => val,
                 None => panic!("Can't read STDIN"),
             }
@@ -171,7 +178,7 @@ pub fn get_opts() -> MpwOptions {
         None => String::new(),
     };
 
-    MpwOptions {
+    let mpw_options = MpwOptions {
         site: site,
         user: user,
         variant: variant.unwrap(),
@@ -179,5 +186,12 @@ pub fn get_opts() -> MpwOptions {
         counter: counter,
         algo: algo,
         context: context,
+    };
+
+    if matches.is_present("save") {
+        store::save_to_sql_lite(mpw_options)
+    }
+    else {
+        mpw_options
     }
 }

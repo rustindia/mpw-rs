@@ -22,6 +22,8 @@ use self::argon2rs::{Variant, Argon2};
 pub const KEY_LENGTH: usize = 64_usize;
 
 #[derive(PartialEq, Eq)]
+#[derive(Debug)]
+#[derive(Clone)]
 pub enum SiteVariant {
     Password,
     Login,
@@ -40,6 +42,8 @@ impl SiteVariant {
 }
 
 #[derive(PartialEq, Eq)]
+#[derive(Debug)]
+#[derive(Clone)]
 pub enum SiteType {
     Maximum,
     Long,
