@@ -49,9 +49,9 @@ panic = 'abort'
 argon2rs = "0.2"
 bcrypt = "0.1"
 clap = "2"
-rpassword = "0.4"
-ring = "0.9"
-ring-pwhash = "0.2"
+rpassword = "1.0"
+ring = "0.11"
+ring-pwhash = "0.11"
 rustyline = "1.0"
 
 [badges]
