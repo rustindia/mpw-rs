@@ -174,12 +174,12 @@ pub fn get_opts() -> MpwOptions {
     };
 
     MpwOptions {
-        site: site,
-        user: user,
+        site,
+        user,
         variant: variant.unwrap(),
         template: template.unwrap(),
-        counter: counter,
-        algo: algo,
-        context: context,
+        counter,
+        algo,
+        context,
     }
 }
