@@ -47,6 +47,6 @@ mod tests {
 
     #[test]
     fn get_identicon_for_full_name_and_master_password() {
-        assert!(generate("test", "test") == "╔░╝☂");
+        assert_eq!(generate("test", "test"), "╔░╝☂");
     }
 }

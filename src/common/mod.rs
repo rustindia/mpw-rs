@@ -23,7 +23,7 @@ use self::argon2rs::{Variant, Argon2};
 
 pub const KEY_LENGTH: usize = 64_usize;
 
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Debug)]
 pub enum SiteVariant {
     Password,
     Login,
@@ -41,7 +41,7 @@ impl SiteVariant {
     }
 }
 
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Debug)]
 pub enum SiteType {
     Maximum,
     Long,
@@ -171,48 +171,48 @@ mod tests {
 
     #[test]
     fn get_valid_site_variant() {
-        assert!(SiteVariant::from("password") == Some(SiteVariant::Password));
+        assert_eq!(SiteVariant::from("password"), Some(SiteVariant::Password));
     }
 
     #[test]
     fn get_invalid_site_variant() {
-        assert!(SiteVariant::from("invalid") == None);
+        assert_eq!(SiteVariant::from("invalid"), None);
     }
 
     #[test]
     fn get_valid_site_type() {
-        assert!(SiteType::from("basic") == Some(SiteType::Basic));
+        assert_eq!(SiteType::from("basic"), Some(SiteType::Basic));
     }
 
     #[test]
     fn get_invalid_site_type() {
-        assert!(SiteType::from("invalid") == None);
+        assert_eq!(SiteType::from("invalid"), None);
     }
 
     #[test]
     fn get_scope_for_valid_variant() {
-        assert!(scope_for_variant(&SiteVariant::Password) ==
-                Some(String::from("com.lyndir.masterpassword")));
+        assert_eq!(scope_for_variant(&SiteVariant::Password),
+                   Some(String::from("com.lyndir.masterpassword")));
     }
 
     #[test]
     fn get_template_for_valid_type() {
-        assert!(template_for_type(&SiteType::Long, &(11 as u8)) ==
-                Some(String::from("CvcvCvcvCvccno")));
+        assert_eq!(template_for_type(&SiteType::Long, &(11 as u8)),
+                   Some(String::from("CvcvCvcvCvccno")));
     }
 
     #[test]
     fn get_character_from_valid_class() {
-        assert!(character_from_class(b'v', 11 as usize) == Some(b'e'));
+        assert_eq!(character_from_class(b'v', 11 as usize), Some(b'e'));
     }
 
     #[test]
     fn get_character_from_invalid_class() {
-        assert!(character_from_class(b'z', 11 as usize) == None);
+        assert_eq!(character_from_class(b'z', 11 as usize), None);
     }
 
     #[test]
     fn get_bytes_from_u32() {
-        assert!(u32_to_bytes(2) == [0, 0, 0, 2]);
+        assert_eq!(u32_to_bytes(2), [0, 0, 0, 2]);
     }
 }

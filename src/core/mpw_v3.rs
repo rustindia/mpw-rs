@@ -75,15 +75,15 @@ pub fn password_for_site(master_key: &[u8; common::KEY_LENGTH],
                 .iter()
                 .zip(1..template_bytes.len() + 1)
                 .map(|pair| {
-                         common::character_from_class(*pair.0, site_password_seed[pair.1] as usize)
-                     })
+                    common::character_from_class(*pair.0, site_password_seed[pair.1] as usize)
+                })
                 .collect::<Vec<Option<u8>>>();
 
             if password.iter().any(|c| c.is_none()) {
                 None
             } else {
                 Some(String::from_utf8(password.iter().map(|c| c.unwrap()).collect::<Vec<u8>>())
-                         .unwrap())
+                    .unwrap())
             }
         } else {
             None
@@ -104,11 +104,11 @@ mod tests {
             .unwrap()
             .to_vec();
 
-        assert!(actual ==
-                vec![51, 253, 82, 252, 68, 97, 191, 162, 127, 73, 153, 160, 52, 128, 204, 4, 183,
-                     190, 106, 180, 68, 126, 100, 94, 132, 141, 99, 143, 106, 211, 94, 245, 245,
-                     255, 195, 72, 28, 128, 197, 51, 99, 27, 125, 24, 54, 193, 223, 230, 118,
-                     181, 225, 236, 171, 104, 9, 158, 214, 23, 166, 89, 36, 174, 64, 112]);
+        assert_eq!(actual,
+                   vec![51, 253, 82, 252, 68, 97, 191, 162, 127, 73, 153, 160, 52, 128, 204, 4, 183,
+                        190, 106, 180, 68, 126, 100, 94, 132, 141, 99, 143, 106, 211, 94, 245, 245,
+                        255, 195, 72, 28, 128, 197, 51, 99, 27, 125, 24, 54, 193, 223, 230, 118,
+                        181, 225, 236, 171, 104, 9, 158, 214, 23, 166, 89, 36, 174, 64, 112]);
     }
 
     #[test]
@@ -121,6 +121,6 @@ mod tests {
                                        &SiteVariant::Password,
                                        "");
 
-        assert!(actual == Some(String::from("QsKBWAYdT9dh^AOGVA0.")));
+        assert_eq!(actual, Some(String::from("QsKBWAYdT9dh^AOGVA0.")));
     }
 }
