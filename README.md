@@ -1,5 +1,5 @@
 [![license](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
-[![Build Status](https://travis-ci.org/lispyclouds/mpw-rs.svg?branch=master)](https://travis-ci.org/lispyclouds/mpw-rs)
+[![Build Status](https://travis-ci.org/rust-hyderabad/mpw-rs.svg?branch=master)](https://travis-ci.org/rust-hyderabad/mpw-rs)
 [![Crates.io](https://meritbadge.herokuapp.com/mpw-rs)](https://crates.io/crates/mpw-rs)
 
 # [Master Password •••|](http://masterpasswordapp.com)
@@ -20,7 +20,7 @@ This can be used as a **drop-in replacement for the reference C version**, offer
 ## Installing via Cargo
 - Make sure **Rust 1.15+** is installed.
 - Run `cargo install mpw-rs`
-- It will be available on PATH as `mpw-rs` for the current user. 
+- It will be available on PATH as `mpw-rs` for the current user.
 
 ## "Next" features
 To use the Argon2 based KDF instead of Scrypt:
