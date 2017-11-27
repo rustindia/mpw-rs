@@ -133,7 +133,7 @@ pub fn get_opts() -> MpwOptions {
     let user = match helpers::read_opt(&matches, "user", "MP_FULLNAME") {
         Some(val) => val.to_string(),
         None => {
-            match helpers::raw_input("Site Name: ") {
+            match helpers::raw_input("User Name: ") {
                 Some(val) => val,
                 None => panic!("Can't read STDIN"),
             }
