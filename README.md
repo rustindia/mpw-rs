@@ -7,6 +7,8 @@
 This is the Rust version of the original found [here](https://github.com/Lyndir/MasterPassword).
 This can be used as a **drop-in replacement for the reference C version**, offering greater runtime safety and memory leaks protection with at-par performance.
 
+<a href="url"><img src="https://user-images.githubusercontent.com/2767425/31902097-4979d340-b841-11e7-8655-2d24515dbccf.png" align="center" height="128" width="128" ></a>
+
 ## Requirements
 - [Rust](https://www.rust-lang.org/en-US/install.html) 1.15+
 
