@@ -1,6 +1,3 @@
-extern crate scrypt;
-extern crate argon2rs;
-
 /*
  * This file is part of Master Password.
  *
@@ -18,8 +15,8 @@ extern crate argon2rs;
  * along with Master Password. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use self::scrypt::{scrypt, ScryptParams};
-use self::argon2rs::{Variant, Argon2};
+use scrypt::{scrypt, ScryptParams};
+use argon2rs::{Variant, Argon2};
 
 pub const KEY_LENGTH: usize = 64_usize;
 
@@ -167,7 +164,6 @@ pub fn derive_key_argon(password: &[u8], salt: &[u8]) -> [u8; KEY_LENGTH] {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use common::{SiteType, SiteVariant};
 
     #[test]
     fn get_valid_site_variant() {

@@ -1,5 +1,3 @@
-extern crate clap;
-
 /*
  * This file is part of Master Password.
  *
@@ -20,9 +18,9 @@ extern crate clap;
 mod helpers;
 
 use std::process;
-use self::clap::{Arg, App};
-use common::{SiteVariant, SiteType};
-use benchmark::mpw_bench;
+use clap::{Arg, App};
+use crate::common::{SiteVariant, SiteType};
+use crate::benchmark::mpw_bench;
 
 pub struct MpwOptions {
     pub site: String,

@@ -1,5 +1,3 @@
-extern crate ring;
-
 /*
  * This file is part of Master Password.
  *
@@ -17,7 +15,7 @@ extern crate ring;
  * along with Master Password. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use self::ring::{digest, hmac};
+use ring::{digest, hmac};
 
 pub fn generate(full_name: &str, master_password: &str) -> String {
     let left_arm = vec!['╔', '╚', '╰', '═'];
