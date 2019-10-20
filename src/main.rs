@@ -1,3 +1,4 @@
+#![feature(test)]
 /*
  * This file is part of Master Password.
  *
