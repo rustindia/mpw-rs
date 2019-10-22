@@ -17,10 +17,8 @@
 
 mod helpers;
 
-use std::process;
 use clap::{Arg, App};
 use crate::common::{SiteVariant, SiteType};
-use crate::benchmark::mpw_bench;
 
 pub struct MpwOptions {
     pub site: String,
@@ -106,17 +104,7 @@ pub fn get_opts() -> MpwOptions {
                 -v l, login    | Doesn't currently use a context.\n\
                 -v a, answer   | Empty for a universal site answer or the most significant \
                 word(s) of the question."))
-        .arg(Arg::with_name("benchmark")
-                 .short("b")
-                 .long("benchmark")
-                 .help("Benchmarks this program")
-                 .takes_value(false))
         .get_matches();
-
-    if matches.is_present("benchmark") {
-        mpw_bench();
-        process::exit(0);
-    }
 
     let site = match helpers::read_opt(&matches, "site", "") {
         Some(val) => val.to_string(),
