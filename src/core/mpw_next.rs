@@ -15,7 +15,7 @@
  * along with Master Password. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use common;
+use crate::common;
 use common::SiteVariant;
 
 pub fn master_key(full_name: &str,

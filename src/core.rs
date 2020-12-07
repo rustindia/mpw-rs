@@ -18,8 +18,8 @@
 mod mpw_v3;
 mod mpw_next;
 
-use common::KEY_LENGTH;
-use common::{SiteType, SiteVariant};
+use crate::common::KEY_LENGTH;
+use crate::common::{SiteType, SiteVariant};
 
 pub fn master_key_for_user(full_name: &str,
                            master_password: &str,

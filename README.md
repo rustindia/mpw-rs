@@ -17,7 +17,7 @@ This can be used as a **drop-in replacement for the reference C version**, offer
 - `cargo run --release`
 
 ## Benchmarking
-- `cargo run --release -- --benchmark`
+- `cargo +nightly bench`
 
 ## Installing via Cargo
 - Make sure **Rust 1.15+** is installed.

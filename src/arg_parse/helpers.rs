@@ -1,6 +1,3 @@
-extern crate clap;
-extern crate rustyline;
-
 /*
  * This file is part of Master Password.
  *
@@ -19,8 +16,8 @@ extern crate rustyline;
  */
 
 use std::env;
-use self::rustyline::error::ReadlineError;
-use self::rustyline::Editor;
+use rustyline::error::ReadlineError;
+use rustyline::Editor;
 
 pub fn read_opt(matches: &clap::ArgMatches, name: &str, env_var: &str) -> Option<String> {
     match matches.value_of(name) {
