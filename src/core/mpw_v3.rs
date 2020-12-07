@@ -1,5 +1,3 @@
-extern crate ring;
-
 /*
  * This file is part of Master Password.
  *
@@ -17,8 +15,8 @@ extern crate ring;
  * along with Master Password. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use self::ring::{digest, hmac};
-use common;
+use ring::{digest, hmac};
+use crate::common;
 use common::{SiteVariant, SiteType};
 
 pub fn master_key(full_name: &str,

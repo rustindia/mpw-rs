@@ -19,11 +19,13 @@ version = "2.4.3"
 description = """Master Password is an algorithm used to generate unique
 passwords for websites, email accounts, or anything else based only on easily
 reproducible input."""
+
 documentation = "http://masterpasswordapp.com/algorithm.html"
 homepage = "http://masterpasswordapp.com/"
 repository = "https://github.com/lispyclouds/mpw-rs.git"
 readme = "README.md"
 license = "GPL-3.0"
+
 authors = [
     "Rahul De <rahul080327@gmail.com>",
     "Maarten Billemont <lhunath@lyndir.com>"
@@ -35,6 +37,8 @@ keywords = [
     "stateless",
     "password"
 ]
+
+edition = "2018"
 
 [profile.release]
 opt-level = 3
@@ -50,8 +54,8 @@ argon2rs = "0.2"
 bcrypt = "0.1"
 clap = "2"
 rpassword = "1.0"
-ring = "0.11"
-ring-pwhash = "0.11"
+ring = "0.14"
+scrypt = "0.2"
 rustyline = "1.0"
 
 [badges]

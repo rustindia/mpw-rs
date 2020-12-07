@@ -1,5 +1,3 @@
-extern crate rpassword;
-
 /*
  * This file is part of Master Password.
  *
